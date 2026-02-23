@@ -13,7 +13,6 @@ import francisco.simon.projectkmp.ui.theme.ProjectKmp
 @Composable
 @Preview
 fun App() {
-
     ProjectKmp {
         Box {
             val navController = rememberNavController()
