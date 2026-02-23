@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.ui
+package francisco.simon.projectkmp.ui.utils
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

@@ -2,7 +2,6 @@ package francisco.simon.projectkmp
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +21,6 @@ fun App() {
                 navController = navController,
                 startDestination = OnboardingRoute,
                 modifier = Modifier
-                    .safeContentPadding()
                     .fillMaxSize()
             )
         }

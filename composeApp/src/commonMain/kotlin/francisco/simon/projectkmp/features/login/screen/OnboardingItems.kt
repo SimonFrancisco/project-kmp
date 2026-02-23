@@ -22,12 +22,13 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.compose_multiplatform
+import projectkmp.composeapp.generated.resources.ic_loading_coil
 import projectkmp.composeapp.generated.resources.onboarding_button_text
 import projectkmp.composeapp.generated.resources.onboarding_description
 import projectkmp.composeapp.generated.resources.onboarding_label
 
 private const val ONBOARDING_IMAGE_LINK =
-    "https://i.pinimg.com/736x/64/e3/95/64e395eaaf8718be83ca264bbe082ea7.jpg"
+    "https://fsd.multiurok.ru/html/2019/05/07/s_5cd1a91d8c411/1153487_2.png"
 
 @Composable
 internal fun ColumnScope.CompanyImage() {
@@ -36,7 +37,7 @@ internal fun ColumnScope.CompanyImage() {
         contentDescription = null,
         modifier = Modifier.size(240.dp)
             .weight(1f),
-        placeholder = painterResource(Res.drawable.compose_multiplatform),
+        placeholder = painterResource(Res.drawable.ic_loading_coil),
         error = painterResource(Res.drawable.compose_multiplatform)
     )
 }
