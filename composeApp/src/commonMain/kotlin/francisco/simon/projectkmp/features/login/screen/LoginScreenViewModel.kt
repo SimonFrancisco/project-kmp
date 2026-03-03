@@ -56,7 +56,6 @@ class LoginScreenViewModel(
     }
 }
 
-
 internal class LoginScreenViewModelFactory(
     private val loginUseCase: LoginUseCase
 ) : ViewModelProvider.Factory {

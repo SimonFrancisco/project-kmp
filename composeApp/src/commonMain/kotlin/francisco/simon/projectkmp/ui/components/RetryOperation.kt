@@ -22,7 +22,6 @@ import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
-import projectkmp.composeapp.generated.resources.login_label
 import projectkmp.composeapp.generated.resources.try_again
 
 @Composable

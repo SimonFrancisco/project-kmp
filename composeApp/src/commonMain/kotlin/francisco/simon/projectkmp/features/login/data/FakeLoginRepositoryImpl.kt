@@ -17,7 +17,6 @@ class FakeLoginRepositoryImpl : LoginRepository {
                 Result.failure(IllegalStateException())
             }
         }
-
     }
 
     private fun validate(username: String, password: String): Boolean {

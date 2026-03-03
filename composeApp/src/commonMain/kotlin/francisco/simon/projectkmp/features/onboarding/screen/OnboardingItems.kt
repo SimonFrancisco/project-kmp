@@ -34,6 +34,8 @@ import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.onboarding_button_text
 
+// check landscape
+
 @Composable
 fun CarouselWithIndicators(
     images: List<String>,
@@ -61,7 +63,6 @@ fun CarouselWithIndicators(
         // Dots overlay at bottom center
         Row(
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = paddingMedium)

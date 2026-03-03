@@ -38,7 +38,7 @@ private fun OnboardingScreenContent(
     ) {
         CarouselWithIndicators(
             vkRandomPictures,
-            modifier.weight(1f)
+            Modifier.weight(1f)
         )
         ProceedButton(onNavigateToLoginScreen)
     }
