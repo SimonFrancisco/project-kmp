@@ -15,6 +15,11 @@ internal fun VerticalSpacerXMedium() {
 }
 
 @Composable
+internal fun VerticalSpacerSmall() {
+    Spacer(Modifier.height(spaceSmall))
+}
+
+@Composable
 internal fun VerticalSpacerMedium() {
     Spacer(Modifier.height(spaceMedium))
 }

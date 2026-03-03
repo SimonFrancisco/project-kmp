@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import francisco.simon.projectkmp.di.FakeServiceLocator
+import francisco.simon.projectkmp.features.login.domain.LoginUseCase
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.utils.EventConsumer
 import francisco.simon.projectkmp.ui.utils.VerticalSpacerXMedium
@@ -20,7 +22,11 @@ import francisco.simon.projectkmp.ui.utils.VerticalSpacerXMedium
 fun LoginScreen(
     onNavigateToFriendsScreen: () -> Unit
 ) {
-    val viewModel: LoginScreenViewModel = viewModel()
+    val viewModel: LoginScreenViewModel = viewModel(
+        factory = LoginScreenViewModelFactory(
+            loginUseCase = LoginUseCase(FakeServiceLocator.loginRepository)
+        )
+    )
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold { innerPaddings ->

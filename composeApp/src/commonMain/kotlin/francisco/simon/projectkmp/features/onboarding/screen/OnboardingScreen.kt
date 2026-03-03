@@ -8,12 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.paddingMedium
-import francisco.simon.projectkmp.ui.utils.VerticalSpacerXMedium
 
 private const val ONBOARDING_IMAGE_LINK =
-    "https://fsd.multiurok.ru/html/2019/05/07/s_5cd1a91d8c411/1153487_2.png"
+    "https://static.vecteezy.com/system/resources/previews/068/842/002/non_2x/vk-logo-icon-vk-app-transparent-background-free-png.png"
 
 @Composable
 fun OnboardingScreen(
@@ -38,21 +36,23 @@ private fun OnboardingScreenContent(
             .padding(paddingMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CustomAsyncImage(
-            model = ONBOARDING_IMAGE_LINK,
-            modifier = Modifier.weight(1f)
-        )
-        VerticalSpacerXMedium()
-        LabelAndDescription(
-            modifier = Modifier.weight(1f)
+        CarouselWithIndicators(
+            vkRandomPictures,
+            modifier.weight(1f)
         )
         ProceedButton(onNavigateToLoginScreen)
     }
 }
 
+private val vkRandomPictures = listOf<String>(
+    ONBOARDING_IMAGE_LINK,
+    ONBOARDING_IMAGE_LINK,
+    ONBOARDING_IMAGE_LINK
+)
+
 @Composable
 @Preview(showBackground = true)
-private fun OnboardingScreenPreview(){
+private fun OnboardingScreenPreview() {
     OnboardingScreen(
         onNavigateToLoginScreen = {}
     )
