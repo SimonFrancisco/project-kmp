@@ -1,0 +1,10 @@
+<resources>
+    <string name="onboarding_description">Welcome to our bookshop!\nPlease check our catalogs and feel free to email us for more information.\nHave a good read!
+    </string>
+    <string name="onboarding_button_text">Let's get started!</string>
+    <string name="onboarding_label">Bookshop</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="login_label">Login</string>
+</resources>
