@@ -3,10 +3,10 @@ package francisco.simon.projectkmp.features.onboarding.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -34,8 +34,6 @@ import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.onboarding_button_text
 
-// check landscape
-
 @Composable
 fun CarouselWithIndicators(
     images: List<String>,
@@ -49,15 +47,20 @@ fun CarouselWithIndicators(
         HorizontalPager(
             state = pagerState,
             pageSpacing = spaceMedium,
-            contentPadding = PaddingValues(horizontal = paddingLarge),
-            modifier = Modifier.fillMaxWidth()
+            contentPadding = PaddingValues(horizontal = paddingLarge)
         ) { page ->
-            CustomAsyncImage(
-                model = images[page],
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CustomAsyncImage(
+                    model = images[page],
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                )
+            }
         }
 
         // Dots overlay at bottom center
