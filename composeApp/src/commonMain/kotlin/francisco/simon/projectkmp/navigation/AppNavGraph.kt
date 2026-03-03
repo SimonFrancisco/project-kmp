@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import francisco.simon.projectkmp.features.login.navigation.LoginRoute
-import francisco.simon.projectkmp.features.login.screen.OnboardingScreen
+import francisco.simon.projectkmp.features.onboarding.screen.OnboardingScreen
 import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
-import francisco.simon.projectkmp.features.onboarding.screen.LoginScreen
+import francisco.simon.projectkmp.features.login.screen.LoginScreen
 
 @Composable
 internal fun AppNavGraph(

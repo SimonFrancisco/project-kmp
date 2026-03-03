@@ -1,6 +1,5 @@
 package francisco.simon.projectkmp
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,14 +13,12 @@ import francisco.simon.projectkmp.ui.theme.ProjectKmp
 @Preview
 fun App() {
     ProjectKmp {
-        Box {
-            val navController = rememberNavController()
-            AppNavGraph(
-                navController = navController,
-                startDestination = OnboardingRoute,
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-        }
+        val navController = rememberNavController()
+        AppNavGraph(
+            navController = navController,
+            startDestination = OnboardingRoute,
+            modifier = Modifier
+                .fillMaxSize()
+        )
     }
 }

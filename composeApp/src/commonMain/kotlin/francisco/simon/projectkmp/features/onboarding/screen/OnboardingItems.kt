@@ -1,10 +1,6 @@
-package francisco.simon.projectkmp.features.login.screen
+package francisco.simon.projectkmp.features.onboarding.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -16,36 +12,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import org.jetbrains.compose.resources.painterResource
+import francisco.simon.projectkmp.ui.utils.VerticalSpacerMedium
 import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
-import projectkmp.composeapp.generated.resources.compose_multiplatform
-import projectkmp.composeapp.generated.resources.ic_loading_coil
 import projectkmp.composeapp.generated.resources.onboarding_button_text
 import projectkmp.composeapp.generated.resources.onboarding_description
 import projectkmp.composeapp.generated.resources.onboarding_label
 
-private const val ONBOARDING_IMAGE_LINK =
-    "https://fsd.multiurok.ru/html/2019/05/07/s_5cd1a91d8c411/1153487_2.png"
-
 @Composable
-internal fun ColumnScope.CompanyImage() {
-    AsyncImage(
-        model = ONBOARDING_IMAGE_LINK,
-        contentDescription = null,
-        modifier = Modifier.size(240.dp)
-            .weight(1f),
-        placeholder = painterResource(Res.drawable.ic_loading_coil),
-        error = painterResource(Res.drawable.compose_multiplatform)
-    )
-}
-
-@Composable
-internal fun ColumnScope.LabelAndDescription() {
+internal fun LabelAndDescription(
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier.weight(1f),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -54,7 +33,7 @@ internal fun ColumnScope.LabelAndDescription() {
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             fontWeight = FontWeight.ExtraBold
         )
-        Spacer(Modifier.height(16.dp))
+        VerticalSpacerMedium()
         Text(
             text = stringResource(Res.string.onboarding_description).trim(),
             style = MaterialTheme.typography.bodyMedium,

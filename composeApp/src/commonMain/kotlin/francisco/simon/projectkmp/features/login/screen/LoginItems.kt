@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.features.onboarding.screen
+package francisco.simon.projectkmp.features.login.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -44,9 +44,8 @@ internal fun LoginLabel() {
 
 @Composable
 internal fun EmailTextField() {
-    val emailState = rememberTextFieldState()
     OutlinedTextField(
-        state = emailState,
+        state = rememberTextFieldState(),
         label = {
             Text(
                 text = stringResource(Res.string.login_email)
@@ -104,7 +103,6 @@ internal fun PasswordTextField() {
                     },
                     contentDescription = null
                 )
-
             }
         },
         keyboardOptions = KeyboardOptions(
