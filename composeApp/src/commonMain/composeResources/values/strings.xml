@@ -7,4 +7,6 @@
     <string name="login_password">Password</string>
     <string name="login_button_text">Login</string>
     <string name="login_label">Login</string>
+    <string name="try_again">Retry</string>
+    <string name="error_unknown">Something went wrong, try again later!</string>
 </resources>

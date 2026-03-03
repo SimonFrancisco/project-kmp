@@ -34,7 +34,7 @@ internal fun AppNavGraph(
             LoginScreen(
                 onNavigateToFriendsScreen = {
                     navController.navigate(FriendsRoute) {
-                        popUpTo(LoginRoute) {
+                        popUpTo(OnboardingRoute) {
                             inclusive = true
                         }
                     }
