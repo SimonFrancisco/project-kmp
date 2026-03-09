@@ -2,8 +2,6 @@ package francisco.simon.projectkmp.features.login.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -28,7 +26,7 @@ import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.ic_visibility
 import projectkmp.composeapp.generated.resources.ic_visibility_off
 import projectkmp.composeapp.generated.resources.login_button_text
-import projectkmp.composeapp.generated.resources.login_email
+import projectkmp.composeapp.generated.resources.login_username
 import projectkmp.composeapp.generated.resources.login_label
 import projectkmp.composeapp.generated.resources.login_password
 
@@ -43,40 +41,46 @@ internal fun LoginLabel() {
 }
 
 @Composable
-internal fun EmailTextField() {
+internal fun UsernameTextField(
+    username: String,
+    onUsernameChange: (String) -> Unit
+) {
     OutlinedTextField(
-        state = rememberTextFieldState(),
+        value = username,
+        onValueChange = {
+            onUsernameChange(it)
+        },
         label = {
             Text(
-                text = stringResource(Res.string.login_email)
+                text = stringResource(Res.string.login_username)
             )
         },
         placeholder = {
             Text(
-                text = stringResource(Res.string.login_email)
+                text = stringResource(Res.string.login_username)
             )
         },
-        lineLimits = TextFieldLineLimits.SingleLine,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             showKeyboardOnFocus = true
         ),
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
 }
 
 @Composable
-internal fun PasswordTextField() {
-    val password = rememberSaveable {
-        mutableStateOf("")
-    }
+internal fun PasswordTextField(
+    password: String,
+    onPasswordChange: (String) -> Unit,
+) {
     var passwordVisible by rememberSaveable {
         mutableStateOf(false)
     }
     OutlinedTextField(
-        value = password.value,
+        value = password,
         onValueChange = {
-            password.value = it
+            onPasswordChange(it)
         },
         label = {
             Text(
@@ -115,14 +119,18 @@ internal fun PasswordTextField() {
 }
 
 @Composable
-internal fun LoginButton() {
+internal fun LoginButton(
+    onClick: () -> Unit,
+    isActive: Boolean
+) {
     Button(
-        onClick = { /*Add logic later */ },
+        onClick = onClick,
         shape = RectangleShape,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
             contentColor = MaterialTheme.colorScheme.surfaceContainerLowest
         ),
+        enabled = isActive,
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(

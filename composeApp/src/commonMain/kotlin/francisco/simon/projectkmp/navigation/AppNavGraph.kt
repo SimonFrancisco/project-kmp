@@ -5,10 +5,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import francisco.simon.projectkmp.features.friends.navigation.FriendsRoute
+import francisco.simon.projectkmp.features.friends.screen.FriendsScreen
 import francisco.simon.projectkmp.features.login.navigation.LoginRoute
-import francisco.simon.projectkmp.features.onboarding.screen.OnboardingScreen
-import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
 import francisco.simon.projectkmp.features.login.screen.LoginScreen
+import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
+import francisco.simon.projectkmp.features.onboarding.screen.OnboardingScreen
 
 @Composable
 internal fun AppNavGraph(
@@ -24,7 +26,14 @@ internal fun AppNavGraph(
         composable<OnboardingRoute> {
             OnboardingScreen(
                 onNavigateToLoginScreen = {
-                    navController.navigate(LoginRoute) {
+                    navController.navigate(LoginRoute)
+                }
+            )
+        }
+        composable<LoginRoute> {
+            LoginScreen(
+                onNavigateToFriendsScreen = {
+                    navController.navigate(FriendsRoute) {
                         popUpTo(OnboardingRoute) {
                             inclusive = true
                         }
@@ -32,8 +41,8 @@ internal fun AppNavGraph(
                 }
             )
         }
-        composable<LoginRoute> {
-            LoginScreen()
+        composable<FriendsRoute> {
+            FriendsScreen()
         }
     }
 }
