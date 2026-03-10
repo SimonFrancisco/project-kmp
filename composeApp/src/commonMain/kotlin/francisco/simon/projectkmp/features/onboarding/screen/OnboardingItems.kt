@@ -30,9 +30,8 @@ import francisco.simon.projectkmp.ui.theme.paddingExtraSmall
 import francisco.simon.projectkmp.ui.theme.paddingLarge
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.theme.spaceMedium
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import projectkmp.composeapp.generated.resources.Res
-import projectkmp.composeapp.generated.resources.onboarding_button_text
 
 @Composable
 fun CarouselWithIndicators(
@@ -86,21 +85,3 @@ fun CarouselWithIndicators(
     }
 }
 
-@Composable
-internal fun ProceedButton(onNavigateToLoginScreen: () -> Unit) {
-    Button(
-        onClick = onNavigateToLoginScreen,
-        shape = RoundedCornerShape(CornerSize(30)),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            contentColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        )
-    ) {
-        Text(
-            text = stringResource(Res.string.onboarding_button_text),
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.ExtraBold
-
-        )
-    }
-}
