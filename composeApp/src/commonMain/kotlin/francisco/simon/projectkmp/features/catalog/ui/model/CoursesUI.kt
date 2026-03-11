@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.features.catalog.screen
+package francisco.simon.projectkmp.features.catalog.ui.model
 
 import francisco.simon.projectkmp.core.domain.entity.Course
 

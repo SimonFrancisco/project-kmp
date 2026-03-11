@@ -1,6 +1,6 @@
 package francisco.simon.projectkmp.di
 
-import francisco.simon.projectkmp.features.catalog.screen.CatalogScreenViewModel
+import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreenViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

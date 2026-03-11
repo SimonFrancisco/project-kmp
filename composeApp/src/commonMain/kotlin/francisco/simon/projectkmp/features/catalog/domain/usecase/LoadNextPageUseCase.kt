@@ -4,8 +4,8 @@ import francisco.simon.projectkmp.features.catalog.domain.repository.CatalogRepo
 
 class LoadNextPageUseCase(
     private val repository: CatalogRepository
-){
-    suspend operator fun invoke(){
+) {
+    suspend operator fun invoke() {
         repository.loadNextPage()
     }
 }

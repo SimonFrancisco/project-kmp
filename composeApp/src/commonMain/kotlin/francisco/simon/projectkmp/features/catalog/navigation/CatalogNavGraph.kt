@@ -7,7 +7,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph.CatalogRoute
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph.CourseDetailRoute
-import francisco.simon.projectkmp.features.catalog.screen.CatalogScreen
+import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreen
 
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController

@@ -8,73 +8,52 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onStart
 
 class CatalogRepositoryImpl(
     private val httpClient: HttpClient
 ) : CatalogRepository {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-    private val nextDataNeedEvents = MutableSharedFlow<Unit>(replay = 1)
-    private var nextFrom: Int = 1
-    private var hasNext: Boolean? = null
+    private companion object{
+        const val FIRST_PAGE = 1
+    }
+
+    private val loadNextEvents = MutableSharedFlow<Unit>(replay = 1)
+    private var nextPage: Int = FIRST_PAGE
+    private var hasNext: Boolean = true
     private val _coursesTemp = mutableListOf<Courses>()
-    private val coursesTemp: List<Courses>
-        get() = _coursesTemp.toList()
 
-    private val loadedListFlow = flow {
-        nextDataNeedEvents.emit(Unit)
-        nextDataNeedEvents.collect {
-            val startFrom = nextFrom
-            if (hasNext != null && hasNext == false) {
-                emit(_coursesTemp)
-                return@collect
-            }
-            val httpResponse = httpClient.get(
-                urlString = "https://stepik.org/api/course-lists"
-            ) {
-                parameter(key = "page", value = startFrom)
-            }
-            val response = if (hasNext == null) {
-                httpResponse.body<CourseListResponseDto>().also {
-                    nextFrom += it.meta.page
-                    hasNext = it.meta.next
-                }
-            } else {
-                httpResponse.body<CourseListResponseDto>().also {
-                    nextFrom += it.meta.page
-                    hasNext = it.meta.next
-                }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val loadedListFlow =
+        loadNextEvents
+            .onStart { emit(Unit) }
+            .mapLatest {
+                val startFrom = nextPage
+                if (!hasNext) return@mapLatest _coursesTemp.toList()
+                val response = httpClient.get(
+                    urlString = "https://stepik.org/api/course-lists"
+                ) {
+                    parameter(key = "page", value = startFrom)
+                }.body<CourseListResponseDto>()
+                nextPage += 1
+                hasNext = response.meta.next
+
+                _coursesTemp += response.toDomain()
+
+                _coursesTemp.toList()
             }
 
-            val courses = response.toDomain()
-            _coursesTemp.addAll(courses)
-            emit(_coursesTemp)
-        }
-    }.flowOn(Dispatchers.IO)
 
-    private val coursesList: StateFlow<List<Courses>> = loadedListFlow
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = coursesTemp
-        )
-
-
-    override fun getCourses(): StateFlow<List<Courses>> {
-        return coursesList
+    override fun getCourses(): Flow<List<Courses>> {
+        return loadedListFlow
     }
 
     override suspend fun loadNextPage() {
-        nextDataNeedEvents.emit(Unit)
+        loadNextEvents.emit(Unit)
     }
 
 }
