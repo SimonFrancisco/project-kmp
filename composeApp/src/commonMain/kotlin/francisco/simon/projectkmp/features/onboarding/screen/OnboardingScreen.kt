@@ -14,7 +14,7 @@ import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.onboarding_button_text
 
 private const val ONBOARDING_IMAGE_LINK =
-    "https://yt3.googleusercontent.com/WETAq-GLqrVFUTjm_Oq-GUCjr4EIp9p7JsAZQoslCAcpi2VO-xyQOKjHrXhivUv-DkMzZ9UiPQ=s900-c-k-c0x00ffffff-no-rj"
+    "https://upload.wikimedia.org/wikipedia/commons/4/42/Stepik_logotype.png"
 
 @Composable
 fun OnboardingScreen(

@@ -4,9 +4,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +23,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import francisco.simon.projectkmp.features.catalog.domain.entity.Friend
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import francisco.simon.projectkmp.ui.theme.paddingSmall
@@ -30,52 +34,60 @@ internal fun CatalogCard(
     onCardClicked: (friend: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(2),
+        modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onCardClicked(courseUi.id)
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        )
+            .height(200.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingSmall),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            courseUi.courses.forEach {course->
-                CustomAsyncImage(
-                    model = course.cover,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
+        items(courseUi.courses, key = { it.id }) {course->
+            Card(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onCardClicked(courseUi.id)
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.background
                 )
-                HorizontalSpacerSmall()
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingSmall),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = course.summary,
-                        style = MaterialTheme.typography.labelLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                    CustomAsyncImage(
+                        model = course.cover,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(RoundedCornerShape(corner = CornerSize(10)))
                     )
-                    Text(
-                        text = course.workload,
-                        style = MaterialTheme.typography.labelLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    HorizontalSpacerSmall()
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = course.summary,
+                            style = MaterialTheme.typography.labelLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = course.workload,
+                            style = MaterialTheme.typography.labelLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                    }
 
                 }
             }
-
         }
     }
+
 }
 
 

@@ -11,7 +11,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         (application as MyApp).codeAuthFlowFactory.registerActivity(this)
         setContent {
-            MyApp()
             App(
                 authFlowFactory = (application as MyApp).codeAuthFlowFactory
             )

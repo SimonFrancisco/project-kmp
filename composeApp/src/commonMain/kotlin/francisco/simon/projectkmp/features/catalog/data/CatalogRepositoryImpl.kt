@@ -11,11 +11,11 @@ import io.ktor.client.request.parameter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
 class CatalogRepositoryImpl(
@@ -26,14 +26,16 @@ class CatalogRepositoryImpl(
     private val nextDataNeedEvents = MutableSharedFlow<Unit>(replay = 1)
     private var nextFrom: Int = 1
     private var hasNext: Boolean? = null
-    private val coursesTemp = mutableListOf<Courses>()
+    private val _coursesTemp = mutableListOf<Courses>()
+    private val coursesTemp: List<Courses>
+        get() = _coursesTemp.toList()
 
     private val loadedListFlow = flow {
         nextDataNeedEvents.emit(Unit)
         nextDataNeedEvents.collect {
             val startFrom = nextFrom
             if (hasNext != null && hasNext == false) {
-                emit(coursesTemp)
+                emit(_coursesTemp)
                 return@collect
             }
             val httpResponse = httpClient.get(
@@ -42,7 +44,10 @@ class CatalogRepositoryImpl(
                 parameter(key = "page", value = startFrom)
             }
             val response = if (hasNext == null) {
-                httpResponse.body<CourseListResponseDto>()
+                httpResponse.body<CourseListResponseDto>().also {
+                    nextFrom += it.meta.page
+                    hasNext = it.meta.next
+                }
             } else {
                 httpResponse.body<CourseListResponseDto>().also {
                     nextFrom += it.meta.page
@@ -51,10 +56,10 @@ class CatalogRepositoryImpl(
             }
 
             val courses = response.toDomain()
-            coursesTemp.addAll(courses)
-            emit(coursesTemp)
+            _coursesTemp.addAll(courses)
+            emit(_coursesTemp)
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     private val coursesList: StateFlow<List<Courses>> = loadedListFlow
         .stateIn(

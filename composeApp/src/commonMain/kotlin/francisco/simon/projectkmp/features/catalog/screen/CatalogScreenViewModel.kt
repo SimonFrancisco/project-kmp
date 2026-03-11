@@ -9,11 +9,12 @@ import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUs
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import projectkmp.composeapp.generated.resources.Res
-import projectkmp.composeapp.generated.resources.error_unknown
 
 internal class CatalogScreenViewModel(
     getCatalogCoursesUseCase: GetCatalogCoursesUseCase,
@@ -25,48 +26,34 @@ internal class CatalogScreenViewModel(
     private val loadNextDataEvents = MutableSharedFlow<Unit>()
     val showLoading = mutableStateOf<Boolean>(false)
 
-    private val loadNextDataFlow = flow {
-        loadNextDataEvents.collect {
-            recommendationFlow.onSuccess { listCourses ->
-                val courses = listCourses.value.map { coursesList ->
-                    viewModelScope.async {
-                        getCoursesUseCase(coursesList.courses)
-                    }
-                }.awaitAll()
-                courses.map { result ->
-                    result.onSuccess { courses ->
-                        showLoading.value = true
-                        emit(
-                            CatalogScreenState.Success(
-                                courses = listCourses.value.map {
-                                    CoursesUI(
-                                        id = it.id,
-                                        title = it.title,
-                                        courses = courses
-                                    )
-                                },
-                                nextDataLoading = true
-                            )
-                        )
-                        showLoading.value = false
-                    }.onFailure {
-                        emit(CatalogScreenState.Error(Res.string.error_unknown))
-                    }
+    val state = getCatalogCoursesUseCase()
+        .filter { it.isNotEmpty() }
+        .map { coursesList ->
+            val sections = coursesList.map { catalog ->
+                viewModelScope.async {
+                    val courses = getCoursesUseCase(catalog.courses)
+                        .getOrThrow()
+                    CoursesUI(
+                        id = catalog.id,
+                        title = catalog.title,
+                        courses = courses
+                    )
                 }
-            }.onFailure {
-                emit(CatalogScreenState.Error(Res.string.error_unknown))
-            }
-        }
-    }
-
-
-    val state = loadNextDataFlow.onStart {
-        emit(CatalogScreenState.Loading)
-    }
+            }.awaitAll()
+            CatalogScreenState.Success(
+                courses = sections,
+                nextDataLoading = false
+            ) as CatalogScreenState
+        }.onStart {
+            emit(CatalogScreenState.Loading)
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.Lazily,
+            CatalogScreenState.Loading
+        )
 
     fun loadNextCourses() {
         viewModelScope.launch {
-            loadNextDataEvents.emit(Unit)
             loadNextPageUseCase()
         }
     }

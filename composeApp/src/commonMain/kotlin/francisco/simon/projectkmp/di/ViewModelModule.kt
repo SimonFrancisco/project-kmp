@@ -10,7 +10,6 @@ internal val viewModelModule = module {
             getCoursesUseCase = get(),
             getCatalogCoursesUseCase = get(),
             loadNextPageUseCase = get()
-
         )
     }
 }

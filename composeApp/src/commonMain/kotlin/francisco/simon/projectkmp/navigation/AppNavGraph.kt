@@ -18,7 +18,7 @@ import org.publicvalue.multiplatform.oidc.flows.CodeAuthFlowFactory
 internal fun AppNavGraph(
     navController: NavHostController,
     startDestination: Any,
-    authFlowFactory: CodeAuthFlowFactory,
+    authFlowFactory: CodeAuthFlowFactory?,
     modifier: Modifier = Modifier
 ) {
     NavHost(

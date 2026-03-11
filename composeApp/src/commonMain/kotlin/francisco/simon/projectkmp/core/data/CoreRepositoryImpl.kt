@@ -11,7 +11,7 @@ class CoreRepositoryImpl(private val httpClient: HttpClient) : CoreRepository {
 
     override suspend fun getCourses(listInt: List<Int>): List<Course> {
         val httpResponse = httpClient.get(
-            urlString = "https://stepik.org/api/course"
+            urlString = "https://stepik.org/api/courses"
         ) {
             listInt.forEach { courseId ->
                 parameter(key = "ids[]", value = courseId)

@@ -53,6 +53,8 @@ kotlin {
             implementation(libs.oidc.ktor)
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization)
             implementation(libs.napier)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)

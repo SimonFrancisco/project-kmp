@@ -1,5 +1,6 @@
 package francisco.simon.projectkmp.features.catalog.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,7 +25,7 @@ fun CatalogScreen(
 ) {
     val viewModel: CatalogScreenViewModel = koinViewModel()
     val state =
-        viewModel.state.collectAsStateWithLifecycle(initialValue = CatalogScreenState.Loading)
+        viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold { innerPaddings ->
         CatalogScreenContent(
@@ -41,7 +41,6 @@ fun CatalogScreen(
     }
 }
 
-
 @Composable
 private fun CatalogScreenContent(
     modifier: Modifier = Modifier,
@@ -54,6 +53,7 @@ private fun CatalogScreenContent(
     Column(
         modifier = modifier
     ) {
+        //Napier.d(tag = "CatalogScreenContent", message =  state.toString())
         when (state) {
             is CatalogScreenState.Error -> {
                 RetryCall(
@@ -65,8 +65,8 @@ private fun CatalogScreenContent(
             is CatalogScreenState.Loading -> {
                 FullScreenLoading()
             }
-
             is CatalogScreenState.Success -> {
+                //Napier.d(tag = "CatalogScreenContentSuccess", message =  state.toString())
                 CatalogList(
                     onGoToDetailedInfo = onGoToDetailedInfo,
                     courses = state.courses,
@@ -85,14 +85,15 @@ private fun CatalogList(
     nextDataIsLoading: Boolean,
     loadNextCourses: () -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(30.dp)
+    ) {
         items(courses, key = { it.id }) { courseUi ->
             CatalogCard(
                 courseUi = courseUi,
                 onCardClicked = onGoToDetailedInfo
             )
         }
-
         item {
             if (nextDataIsLoading) {
                 Box(
@@ -105,9 +106,9 @@ private fun CatalogList(
                     CircularProgressIndicator()
                 }
             } else {
-                SideEffect {
-                    loadNextCourses()
-                }
+//                SideEffect {
+//                    loadNextCourses()
+//                }
 
             }
         }

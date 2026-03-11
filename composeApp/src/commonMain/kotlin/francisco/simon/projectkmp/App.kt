@@ -22,7 +22,7 @@ import org.publicvalue.multiplatform.oidc.flows.CodeAuthFlowFactory
 @Composable
 @Preview
 fun App(
-    authFlowFactory: CodeAuthFlowFactory
+    authFlowFactory: CodeAuthFlowFactory? = null
 ) {
     ProjectKmp {
         val navController = rememberNavController()
