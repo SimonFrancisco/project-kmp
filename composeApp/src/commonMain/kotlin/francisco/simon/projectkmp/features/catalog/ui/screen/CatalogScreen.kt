@@ -41,7 +41,7 @@ fun CatalogScreen(
         CatalogScreenContent(
             modifier = Modifier.fillMaxSize(),
             state = state.value,
-            onGoToDetailedInfo = {},
+            onGoToDetailedInfo = onOpenDetailScreen,
             onTryAgain = viewModel::retry,
             nextDataIsLoading = viewModel.showLoading.value,
             loadNextCourses = viewModel::loadNextCourses
@@ -114,7 +114,9 @@ private fun CatalogList(
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 ) {
                     items(courseUi.courses, key = {it.id}) { course ->
-                        CatalogCard(course, onCardClicked = {})
+                        CatalogCard(course, onCardClicked = {
+                            onGoToDetailedInfo(it)
+                        })
                     }
                 }
             }

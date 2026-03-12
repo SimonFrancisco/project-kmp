@@ -1,6 +1,6 @@
 package francisco.simon.projectkmp.di
 
-import francisco.simon.projectkmp.core.data.CoreRepositoryImpl
+import francisco.simon.projectkmp.core.data.impl.CoreRepositoryImpl
 import francisco.simon.projectkmp.core.domain.repository.CoreRepository
 import francisco.simon.projectkmp.features.catalog.data.CatalogRepositoryImpl
 import francisco.simon.projectkmp.features.catalog.domain.repository.CatalogRepository

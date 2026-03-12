@@ -13,6 +13,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
@@ -32,7 +33,7 @@ internal class CatalogScreenViewModel(
     val showLoading = mutableStateOf<Boolean>(false)
 
     private val _state = MutableStateFlow<CatalogScreenState>(CatalogScreenState.Loading)
-    val state: StateFlow<CatalogScreenState> = _state
+    val state: StateFlow<CatalogScreenState> = _state.asStateFlow()
 
     init {
         loadCatalogs()
@@ -73,7 +74,6 @@ internal class CatalogScreenViewModel(
                     _state.update {
                         value
                     }
-
                 }
         }
     }

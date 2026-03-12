@@ -12,26 +12,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.paddingExtraSmall
 import francisco.simon.projectkmp.ui.theme.paddingLarge
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.theme.spaceMedium
-import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CarouselWithIndicators(
@@ -55,7 +47,6 @@ fun CarouselWithIndicators(
             ) {
                 CustomAsyncImage(
                     model = images[page],
-                    contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
                 )

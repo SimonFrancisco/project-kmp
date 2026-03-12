@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.core.data
+package francisco.simon.projectkmp.core.data.utils
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

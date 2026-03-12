@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.core.data
+package francisco.simon.projectkmp.core.data.dto
 
 import francisco.simon.projectkmp.core.domain.entity.Course
 import kotlinx.serialization.SerialName

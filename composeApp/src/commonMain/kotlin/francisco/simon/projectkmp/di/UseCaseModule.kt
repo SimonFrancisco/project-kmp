@@ -1,5 +1,6 @@
 package francisco.simon.projectkmp.di
 
+import francisco.simon.projectkmp.core.domain.usecase.GetCourseUseCase
 import francisco.simon.projectkmp.core.domain.usecase.GetCoursesUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.GetCatalogCoursesUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUseCase
@@ -10,4 +11,5 @@ internal val useCaseModule = module {
     singleOf(constructor = ::GetCoursesUseCase)
     singleOf(constructor = ::GetCatalogCoursesUseCase)
     singleOf(constructor = ::LoadNextPageUseCase)
+    singleOf(constructor = ::GetCourseUseCase)
 }

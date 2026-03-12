@@ -1,5 +1,7 @@
-package francisco.simon.projectkmp.core.data
+package francisco.simon.projectkmp.core.data.impl
 
+import francisco.simon.projectkmp.core.data.dto.CourseResponseDto
+import francisco.simon.projectkmp.core.data.dto.toDomain
 import francisco.simon.projectkmp.core.domain.entity.Course
 import francisco.simon.projectkmp.core.domain.repository.CoreRepository
 import io.ktor.client.HttpClient
@@ -22,6 +24,15 @@ class CoreRepositoryImpl(private val httpClient: HttpClient) : CoreRepository {
                 }
             }
             httpResponse.body<CourseResponseDto>().toDomain()
+        }
+    }
+
+    override suspend fun getCourse(courseId: Int): Course {
+        return withContext(Dispatchers.IO) {
+            val httpResponse = httpClient.get(
+                urlString = "https://stepik.org/api/courses/$courseId"
+            )
+            httpResponse.body<CourseResponseDto>().courses.first().toDomain()
         }
     }
 }

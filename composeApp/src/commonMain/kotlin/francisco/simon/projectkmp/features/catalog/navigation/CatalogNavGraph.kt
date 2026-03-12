@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph.CatalogRoute
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph.CourseDetailRoute
 import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreen
+import francisco.simon.projectkmp.features.common.CourseDetailScreen
 
 fun NavGraphBuilder.catalogNavGraph(
     navController: NavController
@@ -22,7 +23,12 @@ fun NavGraphBuilder.catalogNavGraph(
         }
         composable<CourseDetailRoute> { entry ->
             val route: CourseDetailRoute = entry.toRoute()
-
+            CourseDetailScreen(
+                courseId = route.courseId,
+                onGoBack = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }
