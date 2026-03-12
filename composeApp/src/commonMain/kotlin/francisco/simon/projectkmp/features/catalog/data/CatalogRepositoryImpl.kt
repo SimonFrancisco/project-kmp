@@ -8,44 +8,50 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.retry
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CatalogRepositoryImpl(
     private val httpClient: HttpClient
 ) : CatalogRepository {
 
-    private companion object{
+    private companion object {
         const val FIRST_PAGE = 1
+        const val RETRY_TIMES = 3L
     }
 
-    private val loadNextEvents = MutableSharedFlow<Unit>(replay = 1)
+    private val loadTrigger = MutableSharedFlow<Unit>(replay = 1)
     private var nextPage: Int = FIRST_PAGE
     private var hasNext: Boolean = true
     private val _coursesTemp = mutableListOf<Courses>()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private val loadedListFlow =
-        loadNextEvents
-            .onStart { emit(Unit) }
-            .mapLatest {
-                val startFrom = nextPage
-                if (!hasNext) return@mapLatest _coursesTemp.toList()
-                val response = httpClient.get(
-                    urlString = "https://stepik.org/api/course-lists"
-                ) {
-                    parameter(key = "page", value = startFrom)
-                }.body<CourseListResponseDto>()
-                nextPage += 1
-                hasNext = response.meta.next
+    private val loadedListFlow = loadTrigger
+        .onStart { emit(Unit) }
+        .mapLatest {
+            val startFrom = nextPage
+            if (!hasNext) return@mapLatest _coursesTemp.toList()
+            val response = httpClient.get(
+                urlString = "https://stepik.org/api/course-lists"
+            ) {
+                parameter(key = "page", value = startFrom)
+            }.body<CourseListResponseDto>()
 
-                _coursesTemp += response.toDomain()
+            nextPage += 1
+            hasNext = response.meta.next
 
-                _coursesTemp.toList()
-            }
+            _coursesTemp += response.toDomain()
+
+            _coursesTemp.toList()
+        }.retry(RETRY_TIMES)
+        .flowOn(Dispatchers.IO)
 
 
     override fun getCourses(): Flow<List<Courses>> {
@@ -53,7 +59,7 @@ class CatalogRepositoryImpl(
     }
 
     override suspend fun loadNextPage() {
-        loadNextEvents.emit(Unit)
+        loadTrigger.emit(Unit)
     }
 
 }

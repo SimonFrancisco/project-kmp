@@ -3,13 +3,22 @@ package francisco.simon.projectkmp.features.catalog.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -28,14 +37,12 @@ fun CatalogScreen(
     val viewModel: CatalogScreenViewModel = koinViewModel()
     val state = viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold { innerPaddings ->
+    Scaffold { _ ->
         CatalogScreenContent(
-            modifier = Modifier.padding(innerPaddings),
+            modifier = Modifier.fillMaxSize(),
             state = state.value,
             onGoToDetailedInfo = {},
-            onTryAgain = {
-
-            },
+            onTryAgain = viewModel::retry,
             nextDataIsLoading = viewModel.showLoading.value,
             loadNextCourses = viewModel::loadNextCourses
         )
@@ -54,7 +61,6 @@ private fun CatalogScreenContent(
     Column(
         modifier = modifier
     ) {
-        //Napier.d(tag = "CatalogScreenContent", message =  state.toString())
         when (state) {
             is CatalogScreenState.Error -> {
                 RetryCall(
@@ -68,7 +74,6 @@ private fun CatalogScreenContent(
             }
 
             is CatalogScreenState.Success -> {
-                //Napier.d(tag = "CatalogScreenContentSuccess", message =  state.toString())
                 CatalogList(
                     onGoToDetailedInfo = onGoToDetailedInfo,
                     courses = state.courses,
@@ -88,13 +93,32 @@ private fun CatalogList(
     loadNextCourses: () -> Unit
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(30.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         itemsIndexed(courses, key = { _, it -> it.id }) { index, courseUi ->
-            CatalogCard(
-                courseUi = courseUi,
-                onCardClicked = onGoToDetailedInfo
-            )
+            Column {
+                Text(
+                    text = courseUi.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(Modifier.height(12.dp))
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(220.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(courseUi.courses, key = {it.id}) { course ->
+                        CatalogCard(course, onCardClicked = {})
+                    }
+                }
+            }
+
             if (index == courses.lastIndex && !nextDataIsLoading) {
                 LaunchedEffect(Unit) {
                     loadNextCourses()
@@ -106,8 +130,7 @@ private fun CatalogList(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(16.dp),
+                        .wrapContentHeight(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

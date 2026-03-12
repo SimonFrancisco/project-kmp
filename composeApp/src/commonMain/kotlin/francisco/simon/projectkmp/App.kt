@@ -41,7 +41,6 @@ fun App(
                     .padding(innerPadding)
             )
         }
-
     }
 }
 
