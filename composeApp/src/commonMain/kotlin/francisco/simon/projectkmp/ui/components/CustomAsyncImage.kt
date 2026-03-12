@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
 import projectkmp.composeapp.generated.resources.Res
-import projectkmp.composeapp.generated.resources.compose_multiplatform
+import projectkmp.composeapp.generated.resources.ic_loading_coil
 
 @Composable
 internal fun CustomAsyncImage(
@@ -17,6 +17,6 @@ internal fun CustomAsyncImage(
         model = model,
         contentDescription = contentDescription,
         modifier = modifier,
-        error = painterResource(Res.drawable.compose_multiplatform)
+        error = painterResource(Res.drawable.ic_loading_coil)
     )
 }

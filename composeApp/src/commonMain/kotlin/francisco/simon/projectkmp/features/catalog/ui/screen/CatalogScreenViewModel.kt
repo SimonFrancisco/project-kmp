@@ -62,7 +62,7 @@ internal class CatalogScreenViewModel(
                                             }
                                         }.awaitAll().filterNotNull()
                                     showLoading.value = false
-                                    CatalogScreenState.Success(sections) as CatalogScreenState
+                                    CatalogScreenState.Success(sections)
                                 },
                                 onFailure = {
                                     showLoading.value = false

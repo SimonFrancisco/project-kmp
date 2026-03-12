@@ -35,7 +35,9 @@ class CourseDetailScreenViewModel(
                         CourseDetailScreenSate.Success(course)
                     }
                 }.onFailure {
-                    CourseDetailScreenSate.Error(Res.string.error_unknown)
+                    _state.update {
+                        CourseDetailScreenSate.Error(Res.string.error_unknown)
+                    }
                 }
         }
     }

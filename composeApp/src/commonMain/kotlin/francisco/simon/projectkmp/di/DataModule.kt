@@ -4,6 +4,8 @@ import francisco.simon.projectkmp.core.data.impl.CoreRepositoryImpl
 import francisco.simon.projectkmp.core.domain.repository.CoreRepository
 import francisco.simon.projectkmp.features.catalog.data.CatalogRepositoryImpl
 import francisco.simon.projectkmp.features.catalog.domain.repository.CatalogRepository
+import francisco.simon.projectkmp.features.search.data.SearchRepositoryImpl
+import francisco.simon.projectkmp.features.search.domain.repository.SearchRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -37,11 +39,15 @@ internal val dataModule = module {
         }
     }
 
-    singleOf(constructor = ::CatalogRepositoryImpl){
+    singleOf(constructor = ::CatalogRepositoryImpl) {
         bind<CatalogRepository>()
     }
 
-    singleOf(constructor = ::CoreRepositoryImpl){
+    singleOf(constructor = ::CoreRepositoryImpl) {
         bind<CoreRepository>()
+    }
+
+    singleOf(constructor = ::SearchRepositoryImpl) {
+        bind<SearchRepository>()
     }
 }
