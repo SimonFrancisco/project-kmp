@@ -8,18 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import francisco.simon.projectkmp.ui.components.ProceedButton
 import francisco.simon.projectkmp.ui.theme.paddingMedium
+import projectkmp.composeapp.generated.resources.Res
+import projectkmp.composeapp.generated.resources.onboarding_button_text
 
 private const val ONBOARDING_IMAGE_LINK =
-    "https://static.vecteezy.com/system/resources/previews/068/842/002/non_2x/vk-logo-icon-vk-app-transparent-background-free-png.png"
+    "https://upload.wikimedia.org/wikipedia/commons/4/42/Stepik_logotype.png"
 
 @Composable
 fun OnboardingScreen(
-    onNavigateToLoginScreen: () -> Unit
+    onNavigateToCatalogScreen: () -> Unit
 ) {
     Scaffold { innerPaddings ->
         OnboardingScreenContent(
-            onNavigateToLoginScreen = onNavigateToLoginScreen,
+            onNavigateToCatalogScreen = onNavigateToCatalogScreen,
             modifier = Modifier.padding(innerPaddings)
         )
     }
@@ -27,7 +30,7 @@ fun OnboardingScreen(
 
 @Composable
 private fun OnboardingScreenContent(
-    onNavigateToLoginScreen: () -> Unit,
+    onNavigateToCatalogScreen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -40,7 +43,10 @@ private fun OnboardingScreenContent(
             vkRandomPictures,
             Modifier.weight(1f)
         )
-        ProceedButton(onNavigateToLoginScreen)
+        ProceedButton(
+            onNavigateToCatalogScreen,
+            buttonText = Res.string.onboarding_button_text
+        )
     }
 }
 
@@ -54,6 +60,6 @@ private val vkRandomPictures = listOf<String>(
 @Preview(showBackground = true)
 private fun OnboardingScreenPreview() {
     OnboardingScreen(
-        onNavigateToLoginScreen = {}
+        onNavigateToCatalogScreen = {}
     )
 }
