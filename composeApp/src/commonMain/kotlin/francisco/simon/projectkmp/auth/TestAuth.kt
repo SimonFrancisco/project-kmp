@@ -1,5 +1,6 @@
 package francisco.simon.projectkmp.auth
 
+import io.github.aakira.napier.Napier
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
@@ -41,6 +42,7 @@ class TestAuth(
                     append("grant_type", "authorization_code")
                 }
             }
+            Napier.d(tag = "TestAuth", message = token.toString())
             accessToken(token)
         }
     }
