@@ -57,7 +57,7 @@ private fun ProfileScreenContent(
         )
         VerticalSpacerMedium()
         ProceedButton(
-            onClick = {},
+            onClick = onNavigateToLogin,
             buttonText = Res.string.login_button_text
         )
     }

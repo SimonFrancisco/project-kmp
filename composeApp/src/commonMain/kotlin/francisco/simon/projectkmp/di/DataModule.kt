@@ -1,5 +1,7 @@
 package francisco.simon.projectkmp.di
 
+import francisco.simon.projectkmp.auth.data.AuthRepository
+import francisco.simon.projectkmp.auth.data.AuthRepositoryImpl
 import francisco.simon.projectkmp.core.data.impl.CoreRepositoryImpl
 import francisco.simon.projectkmp.core.domain.repository.CoreRepository
 import francisco.simon.projectkmp.features.catalog.data.CatalogRepositoryImpl
@@ -37,6 +39,10 @@ internal val dataModule = module {
                 level = LogLevel.ALL
             }
         }
+    }
+
+    singleOf(constructor = ::AuthRepositoryImpl) {
+        bind<AuthRepository>()
     }
 
     singleOf(constructor = ::CatalogRepositoryImpl) {
