@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import francisco.simon.projectkmp.auth.navigation.AuthRoute
 import francisco.simon.projectkmp.features.profile.navigation.ProfileGraph.ProfileRoute
 import francisco.simon.projectkmp.features.profile.screen.ProfileScreen
 
@@ -14,10 +15,9 @@ fun NavGraphBuilder.profileNavGraph(
         composable<ProfileRoute> {
             ProfileScreen(
                 onNavigateToLogin = {
-
+                    navController.navigate(AuthRoute)
                 }
             )
         }
-
     }
 }

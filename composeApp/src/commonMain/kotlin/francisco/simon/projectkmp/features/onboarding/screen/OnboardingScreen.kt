@@ -18,7 +18,7 @@ private const val ONBOARDING_IMAGE_LINK =
 
 @Composable
 fun OnboardingScreen(
-    onNavigateToCatalogScreen: () -> Unit
+    onNavigateToCatalogScreen: () -> Unit,
 ) {
     Scaffold { innerPaddings ->
         OnboardingScreenContent(
@@ -60,6 +60,6 @@ private val vkRandomPictures = listOf<String>(
 @Preview(showBackground = true)
 private fun OnboardingScreenPreview() {
     OnboardingScreen(
-        onNavigateToCatalogScreen = {}
+        onNavigateToCatalogScreen = {},
     )
 }

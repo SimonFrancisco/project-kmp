@@ -9,11 +9,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        (application as MyApp).codeAuthFlowFactory.registerActivity(this)
         setContent {
-            App(
-                authFlowFactory = (application as MyApp).codeAuthFlowFactory
-            )
+            App()
         }
     }
 }
