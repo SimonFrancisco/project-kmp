@@ -1,6 +1,7 @@
 package francisco.simon.projectkmp.features.auth
 
 import android.annotation.SuppressLint
+import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -21,6 +22,13 @@ actual fun StepikAuthWebView(
             WebView(context).apply {
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
+
+                CookieManager.getInstance().apply {
+                    removeAllCookies(null)
+                    flush()
+                }
+                clearCache(true)
+                clearHistory()
                 webViewClient = StepikAuthWebViewClient(redirectUri, onCodeReceived)
                 loadUrl(authorizeUrl)
             }

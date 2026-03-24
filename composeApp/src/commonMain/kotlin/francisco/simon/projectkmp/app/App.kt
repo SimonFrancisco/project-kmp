@@ -51,8 +51,13 @@ fun App() {
                 )
                 LaunchedEffect(state) {
                     when (state) {
-                        AppState.Authorized -> navController.navigate(CatalogGraph) { popUpTo(0) }
-                        AppState.Unauthorized -> navController.navigate(OnboardingRoute) { popUpTo(0) }
+                        AppState.Authorized -> navController.navigate(CatalogGraph) {
+                            popUpTo(0)
+                        }
+
+                        AppState.Unauthorized -> navController.navigate(OnboardingRoute) {
+                            popUpTo(0)
+                        }
                         else -> Unit
                     }
                 }
@@ -71,7 +76,7 @@ private fun BottomBarSettings(
     currentBackStackEntry: NavBackStackEntry?,
     navController: NavHostController
 ) {
-    if (currentBackStackEntry.routeClass() !in hiddenBottomBarRoutes) {
+    if (currentBackStackEntry != null && currentBackStackEntry.routeClass() !in hiddenBottomBarRoutes) {
         AppNavigationBar(
             navController = navController,
             tabs = mainTabs
