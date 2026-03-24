@@ -1,4 +1,5 @@
-package francisco.simon.projectkmp.auth
+package francisco.simon.projectkmp.features.auth.data
+
 import francisco.simon.projectkmp.StepikAppSecrets
 
 object StepikAuthConfig {

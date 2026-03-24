@@ -1,6 +1,7 @@
 package francisco.simon.projectkmp.di
 
-import francisco.simon.projectkmp.auth.AuthViewModel
+import francisco.simon.projectkmp.app.AppViewModel
+import francisco.simon.projectkmp.features.auth.ui.AuthScreenViewModel
 import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreenViewModel
 import francisco.simon.projectkmp.features.common.CourseDetailScreenViewModel
 import francisco.simon.projectkmp.features.search.screen.SearchScreenViewModel
@@ -9,7 +10,7 @@ import org.koin.dsl.module
 
 internal val viewModelModule = module {
     viewModel {
-        AuthViewModel(authRepository = get())
+        AuthScreenViewModel(loginUseCase = get())
     }
 
     viewModel {
@@ -31,6 +32,12 @@ internal val viewModelModule = module {
         SearchScreenViewModel(
             searchCoursesUseCase = get(),
             loadNextSearchPageUseCase = get()
+        )
+    }
+
+    viewModel {
+        AppViewModel(
+            tokenStorage = get()
         )
     }
 }

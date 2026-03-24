@@ -79,6 +79,9 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.ktor.auth)
+            implementation(libs.data.store)
+            implementation(libs.data.store.preferences)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

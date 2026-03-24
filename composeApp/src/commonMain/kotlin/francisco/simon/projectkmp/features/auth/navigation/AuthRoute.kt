@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.auth.navigation
+package francisco.simon.projectkmp.features.auth.navigation
 
 import kotlinx.serialization.Serializable
 

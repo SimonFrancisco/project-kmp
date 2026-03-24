@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.auth
+package francisco.simon.projectkmp.features.auth
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

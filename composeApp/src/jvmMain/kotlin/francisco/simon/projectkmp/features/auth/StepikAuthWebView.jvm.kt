@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.auth
+package francisco.simon.projectkmp.features.auth
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

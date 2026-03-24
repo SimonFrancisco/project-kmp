@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.auth
+package francisco.simon.projectkmp.features.auth
 
 import android.annotation.SuppressLint
 import android.webkit.WebResourceRequest
