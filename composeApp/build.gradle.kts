@@ -1,5 +1,7 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +10,25 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.build.konfig)
+}
+
+val localPropertiesFile: File = rootProject.file("local.properties")
+val localProperties = Properties().apply {
+    load(localPropertiesFile.inputStream())
+}
+
+buildkonfig {
+    packageName = "francisco.simon.projectkmp"
+    objectName = "StepikAppSecrets"
+
+    val clientId = localProperties["stepik.client.id"] as String
+    val clientSecret = localProperties["stepik.client.secret"] as String
+
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_ID", clientId)
+        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_SECRET", clientSecret)
+    }
 }
 
 kotlin {
@@ -16,7 +37,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -26,9 +47,9 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm()
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
@@ -49,8 +70,6 @@ kotlin {
             implementation(libs.coil.ktor)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.oidc.appsupport)
-            implementation(libs.oidc.ktor)
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
@@ -64,7 +83,7 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        iosMain.dependencies{
+        iosMain.dependencies {
             implementation(libs.ktor.ios)
         }
         jvmMain.dependencies {

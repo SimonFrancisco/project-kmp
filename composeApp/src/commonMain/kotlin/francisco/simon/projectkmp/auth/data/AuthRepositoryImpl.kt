@@ -1,5 +1,6 @@
 package francisco.simon.projectkmp.auth.data
 
+import francisco.simon.projectkmp.StepikAppSecrets
 import francisco.simon.projectkmp.auth.StepikAuthConfig
 import francisco.simon.projectkmp.core.utils.runCatchingCancellable
 import io.ktor.client.HttpClient
@@ -15,6 +16,7 @@ import io.ktor.util.encodeBase64
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import kotlin.io.encoding.Base64
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient
@@ -23,10 +25,10 @@ class AuthRepositoryImpl(
     override suspend fun exchangeCodeForToken(code: String): Result<StepikToken> =
         withContext(Dispatchers.IO) {
             runCatchingCancellable {
-                val credentials = "${StepikAuthConfig.CLIENT_ID}:${StepikAuthConfig.CLIENT_SECRET}"
-                val basicAuth = credentials.encodeToByteArray().encodeBase64()
+                val credentials = "${StepikAppSecrets.STEPIK_CLIENT_ID}:${StepikAppSecrets.STEPIK_CLIENT_SECRET}"
+                val basicAuth = Base64.encode(credentials.encodeToByteArray())
                 val response = httpClient.post(StepikAuthConfig.TOKEN_URL) {
-                    header("Authorization", "Basic $basicAuth")
+                    header("Authorization", basicAuth)
                     contentType(ContentType.Application.FormUrlEncoded)
                     setBody(parameters {
                         append("grant_type", "authorization_code")
