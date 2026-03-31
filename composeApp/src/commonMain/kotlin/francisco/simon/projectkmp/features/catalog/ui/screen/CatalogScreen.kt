@@ -98,7 +98,7 @@ private fun CatalogList(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        itemsIndexed(courses, key = { _, it -> it.id }) { index, courseUi ->
+        itemsIndexed(courses, key = { _, coursersUi -> coursersUi.id }) { index, courseUi ->
             Column {
                 Text(
                     text = courseUi.title,

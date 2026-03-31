@@ -34,6 +34,7 @@ buildkonfig {
 
 detekt {
     buildUponDefaultConfig = true
+    autoCorrect = true
     source.setFrom(
             "src/commonMain/kotlin",
             "src/androidMain/kotlin",

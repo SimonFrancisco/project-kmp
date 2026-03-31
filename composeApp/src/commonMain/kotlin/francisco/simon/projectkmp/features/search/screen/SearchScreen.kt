@@ -113,7 +113,7 @@ private fun SearchCourseList(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(16.dp)
     ) {
-        itemsIndexed(courses, key = { _, it -> it.id }) { index, searchCourse ->
+        itemsIndexed(courses, key = { _, searchCourse -> searchCourse.id }) { index, searchCourse ->
             SearchCourseCard(
                 course = searchCourse,
                 onCardClicked = onGoToDetailedInfo

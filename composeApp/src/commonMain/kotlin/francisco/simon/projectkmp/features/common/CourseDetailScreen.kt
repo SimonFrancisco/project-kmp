@@ -16,8 +16,7 @@ fun CourseDetailScreen(
     courseId: Int,
     viewModel: CourseDetailScreenViewModel = koinViewModel(
         parameters = { parametersOf(courseId) }
-    ),
-    onGoBack: () -> Unit
+    )
 ) {
 
     val state = viewModel.state.collectAsStateWithLifecycle()

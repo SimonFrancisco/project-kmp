@@ -25,9 +25,6 @@ fun NavGraphBuilder.catalogNavGraph(
             val route: CourseDetailRoute = entry.toRoute()
             CourseDetailScreen(
                 courseId = route.courseId,
-                onGoBack = {
-                    navController.navigateUp()
-                }
             )
         }
     }

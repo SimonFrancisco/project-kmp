@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.features.search.domain.entity.SearchCourse
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.paddingSmall
+import francisco.simon.projectkmp.ui.utils.CORNER_SIZE_PERCENTAGE10
 import francisco.simon.projectkmp.ui.utils.HorizontalSpacerSmall
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -100,7 +101,7 @@ internal fun SearchCourseCard(
                 contentDescription = null,
                 modifier = Modifier
                     .size(56.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(10)))
+                    .clip(RoundedCornerShape(corner = CornerSize(CORNER_SIZE_PERCENTAGE10)))
             )
             HorizontalSpacerSmall()
 

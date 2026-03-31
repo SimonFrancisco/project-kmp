@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.core.domain.entity.Course
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.paddingSmall
+import francisco.simon.projectkmp.ui.utils.CORNER_SIZE_PERCENTAGE10
 import francisco.simon.projectkmp.ui.utils.HorizontalSpacerSmall
 
 @Composable
@@ -50,7 +51,7 @@ internal fun CatalogCard(
                 contentDescription = null,
                 modifier = Modifier
                     .size(56.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(10)))
+                    .clip(RoundedCornerShape(corner = CornerSize(CORNER_SIZE_PERCENTAGE10)))
             )
             HorizontalSpacerSmall()
             Column {

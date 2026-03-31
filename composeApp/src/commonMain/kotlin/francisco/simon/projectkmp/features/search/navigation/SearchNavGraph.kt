@@ -25,10 +25,7 @@ fun NavGraphBuilder.searchNavGraph(
         composable<CourseDetailRoute> { entry ->
             val route: CatalogGraph.CourseDetailRoute = entry.toRoute()
             CourseDetailScreen(
-                courseId = route.courseId,
-                onGoBack = {
-                    navController.navigateUp()
-                }
+                courseId = route.courseId
             )
         }
     }

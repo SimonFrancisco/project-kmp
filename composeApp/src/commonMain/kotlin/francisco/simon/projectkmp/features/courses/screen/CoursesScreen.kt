@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.components.ProceedButton
+import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.utils.VerticalSpacerMedium
 import org.jetbrains.compose.resources.stringResource
@@ -24,12 +25,9 @@ private const val STEPIK_IMAGE_LINK =
     "https://upload.wikimedia.org/wikipedia/commons/4/42/Stepik_logotype.png"
 
 @Composable
-fun CoursesScreen(
-    onNavigateToCourseDetailScreen: (courseId: Int) -> Unit
-) {
+fun CoursesScreen() {
     Scaffold { innerPaddings ->
         CoursesScreenContent(
-            onNavigateToCourseDetailScreen = onNavigateToCourseDetailScreen,
             modifier = Modifier.padding(innerPaddings)
         )
     }
@@ -37,7 +35,6 @@ fun CoursesScreen(
 
 @Composable
 private fun CoursesScreenContent(
-    onNavigateToCourseDetailScreen: (courseId: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -66,7 +63,7 @@ private fun CoursesScreenContent(
 @Composable
 @Preview(showBackground = true)
 private fun OnboardingScreenPreview() {
-    CoursesScreen(
-        onNavigateToCourseDetailScreen = {}
-    )
+    ProjectKmp {
+        CoursesScreenContent()
+    }
 }

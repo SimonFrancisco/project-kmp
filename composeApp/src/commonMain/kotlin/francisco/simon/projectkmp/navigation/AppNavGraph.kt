@@ -49,7 +49,7 @@ internal fun AppNavGraph(
         }
         catalogNavGraph(navController)
         searchNavGraph(navController)
-        coursesNavGraph(navController)
+        coursesNavGraph()
         profileNavGraph(navController)
     }
 }
