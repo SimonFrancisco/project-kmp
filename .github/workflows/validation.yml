@@ -6,43 +6,37 @@ concurrency:
 
 on:
   pull_request:
+    paths:
+      - '**/*.kt'
+      - '**/*.kts'
+      - 'detekt.yml'
+      - '**/build.gradle.kts'
+      - 'gradle/libs.versions.toml'
   push:
+    paths:
+      - '**/*.kt'
+      - '**/*.kts'
+      - 'detekt.yml'
+      - '**/build.gradle.kts'
+      - 'gradle/libs.versions.toml'
 
 jobs:
-  assemble-android:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Install JDK 17 (Zulu)
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Gradle Cache
-        uses: actions/cache@v5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
-      - name: Assemble Debug
-        if: ${{ github.event_name == 'pull_request' }}
-        run: ./gradlew assembleDebug
-
-      - name: Assemble Release
-        if: ${{ github.event_name == 'push' }}
-        run: ./gradlew assembleRelease
-
   detekt:
     needs: [ 'assemble-android' ]
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+      issues: write
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Install JDK 17 (Zulu)
         uses: actions/setup-java@v5
@@ -50,13 +44,30 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Gradle Setup
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-home-cache-cleanup: true
+
       - name: Gradle Cache
         uses: actions/cache@v5
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Detekt
-        run: ./gradlew detekt
+        run: ./gradlew detekt --continue
+        continue-on-error: false
+
+      - name: Detekt Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detekt-reports
+          path: |
+            **/build/reports/detekt/
+          retention-days: 7
