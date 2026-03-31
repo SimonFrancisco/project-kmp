@@ -4,16 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import francisco.simon.projectkmp.app.App
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        (application as MyApp).codeAuthFlowFactory.registerActivity(this)
         setContent {
-            App(
-                authFlowFactory = (application as MyApp).codeAuthFlowFactory
-            )
+            App()
         }
     }
 }

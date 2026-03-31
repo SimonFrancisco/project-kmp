@@ -32,13 +32,14 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CatalogScreen(
-    onOpenDetailScreen: (Int) -> Unit
+    onOpenDetailScreen: (Int) -> Unit,
+    viewModel: CatalogScreenViewModel = koinViewModel()
 ) {
-    val viewModel: CatalogScreenViewModel = koinViewModel()
     val state = viewModel.state.collectAsStateWithLifecycle()
 
-    Scaffold { _ ->
+    Scaffold { innerPadding ->
         CatalogScreenContent(
+            modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
             state = state.value,
             onGoToDetailedInfo = onOpenDetailScreen,
             onTryAgain = viewModel::retry,
@@ -86,12 +87,14 @@ private fun CatalogScreenContent(
 
 @Composable
 private fun CatalogList(
+    modifier: Modifier = Modifier,
     onGoToDetailedInfo: (Int) -> Unit,
     courses: List<CoursesUI>,
     nextDataIsLoading: Boolean,
     loadNextCourses: () -> Unit
 ) {
     LazyColumn(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
