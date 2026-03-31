@@ -14,11 +14,12 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun CourseDetailScreen(
     courseId: Int,
+    viewModel: CourseDetailScreenViewModel = koinViewModel(
+        parameters = { parametersOf(courseId) }
+    ),
     onGoBack: () -> Unit
 ) {
-    val viewModel: CourseDetailScreenViewModel = koinViewModel(
-        parameters = { parametersOf(courseId) }
-    )
+
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold { innerPaddings ->

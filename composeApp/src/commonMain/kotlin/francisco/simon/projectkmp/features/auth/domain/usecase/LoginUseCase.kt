@@ -12,6 +12,8 @@ class LoginUseCase(
             tokenStorage.saveTokens(it)
         }.onFailure {
             tokenStorage.clear()
-        }.map { }
+        }.map {
+
+        }
     }
 }

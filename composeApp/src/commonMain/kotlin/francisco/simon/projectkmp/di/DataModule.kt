@@ -27,7 +27,7 @@ internal val dataModule = module {
             tokenStorage = get()
         )
     }
-    single<AuthRepository> {
+    factory<AuthRepository> {
         AuthRepositoryImpl(
             httpClient = get(qualifier = PUBLIC_CLIENT)
         )
@@ -39,7 +39,7 @@ internal val dataModule = module {
         )
     }
 
-    single<CoreRepository> {
+    factory<CoreRepository> {
         CoreRepositoryImpl(
             httpClient = get(qualifier = AUTH_CLIENT)
         )

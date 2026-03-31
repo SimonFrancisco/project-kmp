@@ -17,11 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.core.domain.entity.Course
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
-import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import francisco.simon.projectkmp.ui.theme.paddingSmall
 import francisco.simon.projectkmp.ui.utils.HorizontalSpacerSmall
 
@@ -71,21 +69,4 @@ internal fun CatalogCard(
             }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun CatalogCardPreview() {
-    ProjectKmp {
-//        CatalogCard(
-//            Friend(
-//                id = 0,
-//                name = "Simon",
-//                surname = "Francisco",
-//                imageUrl = "https://randomuser.me/api/portraits/men/20.jpg",
-//            ), onCardClicked = {}
-//        )
-    }
-
 }

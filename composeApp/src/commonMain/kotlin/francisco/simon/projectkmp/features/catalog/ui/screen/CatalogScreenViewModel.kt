@@ -23,7 +23,7 @@ import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.error_unknown
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class CatalogScreenViewModel(
+class CatalogScreenViewModel(
     private val getCatalogCoursesUseCase: GetCatalogCoursesUseCase,
     private val loadNextPageUseCase: LoadNextPageUseCase,
     private val getCoursesUseCase: GetCoursesUseCase

@@ -20,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.features.search.domain.entity.SearchCourse
@@ -31,9 +30,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    onOpenDetailScreen: (courseId: Int) -> Unit
+    onOpenDetailScreen: (courseId: Int) -> Unit,
+    viewModel: SearchScreenViewModel = koinViewModel()
 ) {
-    val viewModel: SearchScreenViewModel = koinViewModel()
     val state = viewModel.state.collectAsStateWithLifecycle()
     val query = viewModel.query.collectAsStateWithLifecycle()
 
@@ -141,8 +140,3 @@ private fun SearchCourseList(
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-private fun SearchScreenPreview() {
-    SearchScreen {}
-}
