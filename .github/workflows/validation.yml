@@ -20,6 +20,10 @@ on:
       - '**/build.gradle.kts'
       - 'gradle/libs.versions.toml'
 
+env:
+  STEPIK_CLIENT_ID: ${{ secrets.STEPIK_CLIENT_ID }}
+  STEPIK_CLIENT_SECRET: ${{ secrets.STEPIK_CLIENT_SECRET }}
+
 jobs:
   assemble-android:
     runs-on: ubuntu-latest
