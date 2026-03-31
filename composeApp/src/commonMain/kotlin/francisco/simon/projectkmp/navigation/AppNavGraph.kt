@@ -5,12 +5,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import francisco.simon.projectkmp.features.friends.navigation.FriendsRoute
-import francisco.simon.projectkmp.features.friends.screen.FriendsScreen
-import francisco.simon.projectkmp.features.login.navigation.LoginRoute
-import francisco.simon.projectkmp.features.login.screen.LoginScreen
+import francisco.simon.projectkmp.features.auth.ui.AuthScreen
+import francisco.simon.projectkmp.features.auth.navigation.AuthRoute
+import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
+import francisco.simon.projectkmp.features.catalog.navigation.catalogNavGraph
+import francisco.simon.projectkmp.features.courses.navigation.coursesNavGraph
 import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
 import francisco.simon.projectkmp.features.onboarding.screen.OnboardingScreen
+import francisco.simon.projectkmp.features.profile.navigation.profileNavGraph
+import francisco.simon.projectkmp.features.search.navigation.searchNavGraph
 
 @Composable
 internal fun AppNavGraph(
@@ -25,24 +28,28 @@ internal fun AppNavGraph(
     ) {
         composable<OnboardingRoute> {
             OnboardingScreen(
-                onNavigateToLoginScreen = {
-                    navController.navigate(LoginRoute)
+                onNavigateToCatalogScreen = {
+                    navController.navigate(AuthRoute)
                 }
             )
         }
-        composable<LoginRoute> {
-            LoginScreen(
-                onNavigateToFriendsScreen = {
-                    navController.navigate(FriendsRoute) {
-                        popUpTo(OnboardingRoute) {
+        composable<AuthRoute> {
+            AuthScreen(
+                onAuthFinished = {
+                    navController.navigate(CatalogGraph) {
+                        popUpTo(AuthRoute) {
                             inclusive = true
                         }
                     }
+                },
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }
-        composable<FriendsRoute> {
-            FriendsScreen()
-        }
+        catalogNavGraph(navController)
+        searchNavGraph(navController)
+        coursesNavGraph(navController)
+        profileNavGraph(navController)
     }
 }

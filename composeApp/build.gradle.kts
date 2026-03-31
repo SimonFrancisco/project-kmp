@@ -1,5 +1,7 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +10,25 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.build.konfig)
+}
+
+val localPropertiesFile: File = rootProject.file("local.properties")
+val localProperties = Properties().apply {
+    load(localPropertiesFile.inputStream())
+}
+
+buildkonfig {
+    packageName = "francisco.simon.projectkmp"
+    objectName = "StepikAppSecrets"
+
+    val clientId = localProperties["stepik.client.id"] as String
+    val clientSecret = localProperties["stepik.client.secret"] as String
+
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_ID", clientId)
+        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_SECRET", clientSecret)
+    }
 }
 
 kotlin {
@@ -16,7 +37,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -26,14 +47,16 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     jvm()
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.android)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -47,11 +70,23 @@ kotlin {
             implementation(libs.coil.ktor)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization)
+            implementation(libs.napier)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.ktor.auth)
+            implementation(libs.data.store)
+            implementation(libs.data.store.preferences)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        iosMain.dependencies{
+        iosMain.dependencies {
             implementation(libs.ktor.ios)
         }
         jvmMain.dependencies {
@@ -72,6 +107,8 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+
     }
     packaging {
         resources {
