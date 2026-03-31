@@ -27,19 +27,22 @@ buildkonfig {
     val clientSecret = localProperties["stepik.client.secret"] as String
 
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_ID", clientId)
-        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_SECRET", clientSecret)
+        buildConfigField(FieldSpec.Type.STRING, "STEPIK_CLIENT_ID", clientId)
+        buildConfigField(FieldSpec.Type.STRING, "STEPIK_CLIENT_SECRET", clientSecret)
     }
 }
 
 detekt {
+    buildUponDefaultConfig = true
     source.setFrom(
-        "src/commonMain/kotlin",
-        "src/androidMain/kotlin",
-        "src/iosMain/kotlin",
-        "src/jvmMain/kotlin",
+            "src/commonMain/kotlin",
+            "src/androidMain/kotlin",
+            "src/iosMain/kotlin",
+            "src/jvmMain/kotlin"
     )
+    config.setFrom(rootProject.file("/config/detekt/detekt.yml"))
 }
+
 
 kotlin {
     androidTarget {
@@ -117,8 +120,6 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-
-
     }
     packaging {
         resources {
