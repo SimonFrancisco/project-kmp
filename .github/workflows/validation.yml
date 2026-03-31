@@ -21,7 +21,43 @@ on:
       - 'gradle/libs.versions.toml'
 
 jobs:
+  assemble-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install JDK 17 (Zulu)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Setup
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Gradle Cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Assemble Debug
+        if: ${{ github.event_name == 'pull_request' }}
+        run: ./gradlew assembleDebug
+
+      - name: Assemble Release
+        if: ${{ github.event_name == 'push' }}
+        run: ./gradlew assembleRelease
+
   detekt:
+    needs: [ 'assemble-android' ]
     runs-on: ubuntu-latest
 
     permissions:

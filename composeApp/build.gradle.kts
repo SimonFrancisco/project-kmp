@@ -16,15 +16,23 @@ plugins {
 
 val localPropertiesFile: File = rootProject.file("local.properties")
 val localProperties = Properties().apply {
-    load(localPropertiesFile.inputStream())
+    if (localPropertiesFile.exists()){
+        load(localPropertiesFile.inputStream())
+    }
 }
 
 buildkonfig {
     packageName = "francisco.simon.projectkmp"
     objectName = "StepikAppSecrets"
 
-    val clientId = localProperties["stepik.client.id"] as String
-    val clientSecret = localProperties["stepik.client.secret"] as String
+    // Fallback to environment variables for CI
+    val clientId = localProperties["stepik.client.id"]?.toString()
+        ?: System.getenv("STEPIK_CLIENT_ID")
+        ?: throw GradleException("STEPIK_CLIENT_ID not found in local.properties or environment")
+
+    val clientSecret = localProperties["stepik.client.secret"]?.toString()
+        ?: System.getenv("STEPIK_CLIENT_SECRET")
+        ?: throw GradleException("STEPIK_CLIENT_SECRET not found in local.properties or environment")
 
     defaultConfigs {
         buildConfigField(FieldSpec.Type.STRING, "STEPIK_CLIENT_ID", clientId)
@@ -36,10 +44,10 @@ detekt {
     buildUponDefaultConfig = true
     autoCorrect = true
     source.setFrom(
-            "src/commonMain/kotlin",
-            "src/androidMain/kotlin",
-            "src/iosMain/kotlin",
-            "src/jvmMain/kotlin"
+        "src/commonMain/kotlin",
+        "src/androidMain/kotlin",
+        "src/iosMain/kotlin",
+        "src/jvmMain/kotlin"
     )
     config.setFrom(rootProject.file("/config/detekt/detekt.yml"))
 }
