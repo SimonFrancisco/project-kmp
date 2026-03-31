@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.build.konfig)
+    alias(libs.plugins.detekt)
 }
 
 val localPropertiesFile: File = rootProject.file("local.properties")
@@ -29,6 +30,15 @@ buildkonfig {
         buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_ID", clientId)
         buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_SECRET", clientSecret)
     }
+}
+
+detekt {
+    source.setFrom(
+        "src/commonMain/kotlin",
+        "src/androidMain/kotlin",
+        "src/iosMain/kotlin",
+        "src/jvmMain/kotlin",
+    )
 }
 
 kotlin {

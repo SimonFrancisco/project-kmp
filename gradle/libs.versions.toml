@@ -22,6 +22,7 @@ napier = "2.7.1"
 koin-bom = "4.1.1"
 build-konfig = "0.17.1"
 data-store = "1.2.1"
+detekt = "1.23.8"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -76,3 +77,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 build-konfig = { id = "com.codingfeline.buildkonfig", version.ref = "build-konfig" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
