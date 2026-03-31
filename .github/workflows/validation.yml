@@ -22,7 +22,6 @@ on:
 
 jobs:
   detekt:
-    needs: [ 'assemble-android' ]
     runs-on: ubuntu-latest
 
     permissions:
