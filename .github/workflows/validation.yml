@@ -6,23 +6,14 @@ concurrency:
 
 on:
   pull_request:
-    paths:
-      - '**/*.kt'
-      - '**/*.kts'
-      - 'detekt.yml'
-      - '**/build.gradle.kts'
-      - 'gradle/libs.versions.toml'
   push:
-    paths:
-      - '**/*.kt'
-      - '**/*.kts'
-      - 'detekt.yml'
-      - '**/build.gradle.kts'
-      - 'gradle/libs.versions.toml'
 
 env:
   STEPIK_CLIENT_ID: ${{ secrets.STEPIK_CLIENT_ID }}
   STEPIK_CLIENT_SECRET: ${{ secrets.STEPIK_CLIENT_SECRET }}
+  STEPIK_STORE_PASSWORD: ${{ secrets.STEPIK_STORE_PASSWORD }}
+  STEPIK_KEY_ALIAS: ${{ secrets.STEPIK_KEY_ALIAS }}
+  STEPIK_KEY_PASSWORD: ${{ secrets.STEPIK_KEY_PASSWORD }}
 
 jobs:
   assemble-android:
@@ -30,6 +21,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Checkout keystore repo
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ secrets.KEYSTORE_GIT_REPOSITORY }}
+          token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
+          path: composeApp/keystore
 
       - name: Install JDK 17 (Zulu)
         uses: actions/setup-java@v5
@@ -58,7 +56,15 @@ jobs:
 
       - name: Assemble Release
         if: ${{ github.event_name == 'push' }}
-        run: ./gradlew assembleRelease
+        run: |
+          ./gradlew assembleRelease bundleRelease
+
+      - name: Upload APK
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: composeApp-release.apk
+          path: composeApp/build/outputs/apk/release/composeApp-release.apk
 
   detekt:
     needs: [ 'assemble-android' ]

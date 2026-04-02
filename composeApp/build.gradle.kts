@@ -122,6 +122,28 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+    signingConfigs {
+        val keyStoreFile = file("keystore/keystore_config")
+        val keyStore = Properties().apply {
+            if (keyStoreFile.exists()) {
+                load(keyStoreFile.inputStream())
+            }
+        }
+
+        register("release").configure {
+            if (keyStoreFile.exists()) {
+                storeFile = file("${keyStore["storeFile"]}")
+                storePassword = "${keyStore["storePassword"]}"
+                keyAlias = "${keyStore["keyAlias"]}"
+                keyPassword = "${keyStore["keyPassword"]}"
+            } else {
+                storeFile = file("keystore/stepik_keystore")
+                storePassword = System.getenv("STEPIK_STORE_PASSWORD")
+                keyAlias = System.getenv("STEPIK_KEY_ALIAS")
+                keyPassword = System.getenv("STEPIK_KEY_PASSWORD")
+            }
+        }
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -132,6 +154,7 @@ android {
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             isDebuggable = true
