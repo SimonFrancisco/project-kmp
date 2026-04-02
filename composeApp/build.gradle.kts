@@ -128,9 +128,17 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
         }
+        debug {
+            isDebuggable = true
+        }
+    }
+    buildFeatures {
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

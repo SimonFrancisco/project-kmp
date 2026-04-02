@@ -1,6 +1,7 @@
 package francisco.simon.projectkmp
 
 import android.app.Application
+import android.webkit.WebView
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.crashlytics.crashlytics
 import dev.gitlive.firebase.initialize
@@ -15,9 +16,13 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Napier.base(DebugAntilog())
-        Firebase.initialize(this)
-        Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
+        if (BuildConfig.DEBUG) {
+            Napier.base(DebugAntilog())
+        } else {
+            Firebase.initialize(this)
+            Firebase.crashlytics.setCrashlyticsCollectionEnabled(true)
+            WebView.setWebContentsDebuggingEnabled(false)
+        }
         initKoin {
             androidContext(androidContext = this@MyApp)
             androidLogger(level = Level.INFO)
