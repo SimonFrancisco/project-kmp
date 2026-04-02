@@ -1,5 +1,4 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -45,8 +44,7 @@ detekt {
     source.setFrom(
         "src/commonMain/kotlin",
         "src/androidMain/kotlin",
-        "src/iosMain/kotlin",
-        "src/jvmMain/kotlin"
+        "src/iosMain/kotlin"
     )
     config.setFrom(file("../config/detekt/detekt.yml"))
 }
@@ -67,8 +65,6 @@ kotlin {
             isStatic = true
         }
     }
-
-    jvm()
 
     sourceSets {
         androidMain.dependencies {
@@ -110,11 +106,6 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.ios)
         }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.desktop)
-        }
     }
 }
 
@@ -148,18 +139,6 @@ android {
 dependencies {
     debugImplementation(libs.leakcanary.android)
     debugImplementation(libs.compose.uiTooling)
-}
-
-compose.desktop {
-    application {
-        mainClass = "francisco.simon.projectkmp.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "francisco.simon.projectkmp"
-            packageVersion = "1.0.0"
-        }
-    }
 }
 
 tasks.register<Copy>("copyGitHooks") {
