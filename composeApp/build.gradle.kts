@@ -73,6 +73,8 @@ kotlin {
             implementation(libs.ktor.android)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.android)
+            implementation(project.dependencies.platform(libs.firebase.android.bom))
+            implementation(libs.firebase.common)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

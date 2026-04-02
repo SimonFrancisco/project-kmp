@@ -26,6 +26,7 @@ data-store = "1.2.1"
 detekt = "1.23.8"
 crashlytics = "3.0.6"
 google-services = "4.4.4"
+firebase-android-bom = "34.11.0"
 firebase-gitlive-sdk = "2.4.0"
 
 [libraries]
@@ -73,6 +74,8 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 
+firebase-android-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-android-bom" }
+firebase-common = { module = "com.google.firebase:firebase-common" }
 gitlive-firebase-kotlin-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebase-gitlive-sdk" }
 
 [plugins]
