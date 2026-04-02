@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344153602629",
+    "project_id": "stepik-kmp",
+    "storage_bucket": "stepik-kmp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344153602629:android:a66f8838ea9ee82495812c",
+        "android_client_info": {
+          "package_name": "francisco.simon.projectkmp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDersfl246DxsgDkXK3u4U_bKdLgEErVac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

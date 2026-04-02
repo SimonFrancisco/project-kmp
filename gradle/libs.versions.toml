@@ -24,6 +24,9 @@ koin-bom = "4.1.1"
 build-konfig = "0.17.1"
 data-store = "1.2.1"
 detekt = "1.23.8"
+crashlytics = "3.0.6"
+google-services = "4.4.4"
+firebase-gitlive-sdk = "2.4.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -70,6 +73,8 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 
+gitlive-firebase-kotlin-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebase-gitlive-sdk" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -80,3 +85,6 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 build-konfig = { id = "com.codingfeline.buildkonfig", version.ref = "build-konfig" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+

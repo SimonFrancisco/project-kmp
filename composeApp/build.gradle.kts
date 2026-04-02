@@ -12,6 +12,8 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.build.konfig)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
 }
 
 val localPropertiesFile: File = rootProject.file("local.properties")
@@ -48,7 +50,6 @@ detekt {
     )
     config.setFrom(file("../config/detekt/detekt.yml"))
 }
-
 
 kotlin {
     androidTarget {
@@ -101,6 +102,7 @@ kotlin {
             implementation(libs.ktor.auth)
             implementation(libs.data.store)
             implementation(libs.data.store.preferences)
+            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

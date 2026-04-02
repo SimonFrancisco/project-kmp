@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.SharedFlow
 fun <T> EventConsumer(flow: SharedFlow<T>, block: (T) -> Unit) {
     val blockState by rememberUpdatedState(block)
     val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(flow, lifecycleOwner){
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
-            flow.collect { event->
+    LaunchedEffect(flow, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            flow.collect { event ->
                 blockState(event)
             }
         }
