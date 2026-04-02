@@ -1,6 +1,5 @@
 package francisco.simon.projectkmp.features.catalog.ui.screen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import francisco.simon.projectkmp.core.domain.usecase.GetCoursesUseCase
@@ -30,7 +29,8 @@ class CatalogScreenViewModel(
 ) : ViewModel() {
 
     private val retryTrigger = MutableSharedFlow<Unit>()
-    val showLoading = mutableStateOf<Boolean>(false)
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading = _showLoading.asStateFlow()
 
     private val _state = MutableStateFlow<CatalogScreenState>(CatalogScreenState.Loading)
     val state: StateFlow<CatalogScreenState> = _state.asStateFlow()
@@ -61,11 +61,11 @@ class CatalogScreenViewModel(
                                                     }
                                             }
                                         }.awaitAll().filterNotNull()
-                                    showLoading.value = false
+                                    _showLoading.value = false
                                     CatalogScreenState.Success(sections)
                                 },
                                 onFailure = {
-                                    showLoading.value = false
+                                    _showLoading.value = false
                                     CatalogScreenState.Error(Res.string.error_unknown)
                                 }
                             )
@@ -90,7 +90,7 @@ class CatalogScreenViewModel(
 
     fun loadNextCourses() {
         viewModelScope.launch {
-            showLoading.value = true
+            _showLoading.value = true
             loadNextPageUseCase()
         }
     }

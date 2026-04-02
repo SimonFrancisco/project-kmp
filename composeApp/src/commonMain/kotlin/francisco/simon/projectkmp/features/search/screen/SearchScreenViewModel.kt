@@ -1,6 +1,5 @@
 package francisco.simon.projectkmp.features.search.screen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import francisco.simon.projectkmp.features.search.domain.usecase.LoadNextSearchPageUseCase
@@ -36,7 +35,8 @@ class SearchScreenViewModel(
     }
 
     private val retryTrigger = MutableSharedFlow<Unit>(replay = 1)
-    val showLoading = mutableStateOf<Boolean>(false)
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading = _showLoading.asStateFlow()
 
     private val _state: MutableStateFlow<SearchScreenState> =
         MutableStateFlow(SearchScreenState.Idle)
@@ -62,11 +62,11 @@ class SearchScreenViewModel(
                         searchCoursesUseCase(query).mapLatest { result ->
                             result.fold(
                                 onSuccess = { courses ->
-                                    showLoading.value = false
+                                    _showLoading.value = false
                                     SearchScreenState.Success(courses)
                                 },
                                 onFailure = {
-                                    showLoading.value = false
+                                    _showLoading.value = false
                                     SearchScreenState.Error(Res.string.error_unknown)
                                 }
                             )
@@ -96,7 +96,7 @@ class SearchScreenViewModel(
 
     fun loadNextCourses() {
         viewModelScope.launch {
-            showLoading.value = true
+            _showLoading.value = true
             loadNextSearchPageUseCase()
         }
     }

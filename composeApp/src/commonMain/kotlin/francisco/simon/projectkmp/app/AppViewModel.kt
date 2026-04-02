@@ -24,4 +24,4 @@ class AppViewModel(
             initialValue = AppState.Loading
         )
 
-    }
+}

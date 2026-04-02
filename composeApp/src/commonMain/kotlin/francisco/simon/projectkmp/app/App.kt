@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -47,18 +46,6 @@ fun App() {
                         .fillMaxSize()
                         .padding(innerPadding)
                 )
-                LaunchedEffect(state) {
-                    when (state) {
-                        AppState.Authorized -> navController.navigate(CatalogGraph) {
-                            popUpTo(0)
-                        }
-
-                        AppState.Unauthorized -> navController.navigate(OnboardingRoute) {
-                            popUpTo(0)
-                        }
-                        else -> Unit
-                    }
-                }
             }
         }
     }

@@ -14,13 +14,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.features.catalog.ui.model.CoursesUI
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.utils.LoadMorePages
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -36,6 +37,7 @@ fun CatalogScreen(
     viewModel: CatalogScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
+    val nextDataIsLoading = viewModel.showLoading.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         CatalogScreenContent(
@@ -43,7 +45,7 @@ fun CatalogScreen(
             state = state.value,
             onGoToDetailedInfo = onOpenDetailScreen,
             onTryAgain = viewModel::retry,
-            nextDataIsLoading = viewModel.showLoading.value,
+            nextDataIsLoading = nextDataIsLoading.value,
             loadNextCourses = viewModel::loadNextCourses
         )
     }
@@ -93,12 +95,19 @@ private fun CatalogList(
     nextDataIsLoading: Boolean,
     loadNextCourses: () -> Unit
 ) {
+    val listState = rememberLazyListState()
+    LoadMorePages(
+        listState = listState,
+        nextDataIsLoading = nextDataIsLoading,
+        loadMoreData = loadNextCourses
+    )
     LazyColumn(
         modifier = modifier,
+        state = listState,
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        itemsIndexed(courses, key = { _, coursersUi -> coursersUi.id }) { index, courseUi ->
+        items(courses, key = {  coursersUi -> coursersUi.id }) {courseUi ->
             Column {
                 Text(
                     text = courseUi.title,
@@ -123,11 +132,6 @@ private fun CatalogList(
                 }
             }
 
-            if (index == courses.lastIndex && !nextDataIsLoading) {
-                LaunchedEffect(Unit) {
-                    loadNextCourses()
-                }
-            }
         }
         item {
             if (nextDataIsLoading) {
@@ -142,4 +146,5 @@ private fun CatalogList(
             }
         }
     }
+
 }

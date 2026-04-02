@@ -9,14 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.features.search.domain.entity.SearchCourse
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.utils.LoadMorePages
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +36,7 @@ fun SearchScreen(
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
     val query = viewModel.query.collectAsStateWithLifecycle()
+    val nextDataIsLoading = viewModel.showLoading.collectAsStateWithLifecycle()
 
     val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -56,7 +58,7 @@ fun SearchScreen(
                 .fillMaxSize()
                 .padding(top = innerPadding.calculateTopPadding()),
             state = state.value,
-            nextDataIsLoading = viewModel.showLoading.value,
+            nextDataIsLoading = nextDataIsLoading.value,
             onTryAgain = viewModel::retry,
             onCourseClick = onOpenDetailScreen,
             loadNextCourses = viewModel::loadNextCourses
@@ -109,20 +111,22 @@ private fun SearchCourseList(
     nextDataIsLoading: Boolean,
     loadNextCourses: () -> Unit
 ) {
+    val listState = rememberLazyListState()
+    LoadMorePages(
+        listState = listState,
+        nextDataIsLoading = nextDataIsLoading,
+        loadMoreData = loadNextCourses
+    )
     LazyColumn(
+        state = listState,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(16.dp)
     ) {
-        itemsIndexed(courses, key = { _, searchCourse -> searchCourse.id }) { index, searchCourse ->
+        items(courses, key = { searchCourse -> searchCourse.id }) { searchCourse ->
             SearchCourseCard(
                 course = searchCourse,
                 onCardClicked = onGoToDetailedInfo
             )
-            if (index == courses.lastIndex && !nextDataIsLoading) {
-                LaunchedEffect(Unit) {
-                    loadNextCourses()
-                }
-            }
         }
 
         item {
