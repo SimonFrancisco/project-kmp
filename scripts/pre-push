@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+echo "
+===============
+|  Running detekt...
+===============
+"
+
+./gradlew detekt --parallel
+
+detektStatus=$?
+
+# return 1 exit code if running checks fails
+if [ $detektStatus -ne 0 ]; then
+  echo "Detekt failed. Fix issues before pushing."
+  exit 1
+fi
+
+echo "Detekt passed. Pushing..."
+exit 0

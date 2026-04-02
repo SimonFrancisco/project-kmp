@@ -16,7 +16,7 @@ plugins {
 
 val localPropertiesFile: File = rootProject.file("local.properties")
 val localProperties = Properties().apply {
-    if (localPropertiesFile.exists()){
+    if (localPropertiesFile.exists()) {
         load(localPropertiesFile.inputStream())
     }
 }
@@ -144,6 +144,7 @@ android {
 }
 
 dependencies {
+    debugImplementation(libs.leakcanary.android)
     debugImplementation(libs.compose.uiTooling)
 }
 
@@ -157,4 +158,27 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+tasks.register<Copy>("copyGitHooks") {
+    description = "Copies the git hooks to the .git folder."
+    group = "git hooks"
+    from("$rootDir/scripts")
+    into("$rootDir/.git/hooks/")
+}
+
+tasks.register<Exec>("installGitHooks") {
+    description = "Installs the git hooks."
+    group = "git hooks"
+    workingDir = rootDir
+    commandLine = listOf("chmod")
+    args("-R", "+x", ".git/hooks/")
+    dependsOn("copyGitHooks")
+    doLast {
+        logger.info("Git hook installed successfully.")
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn("installGitHooks")
 }
