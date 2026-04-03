@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import francisco.simon.projectkmp.features.auth.ui.AuthScreen
 import francisco.simon.projectkmp.features.auth.navigation.AuthRoute
+import francisco.simon.projectkmp.features.auth.ui.AuthScreen
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
 import francisco.simon.projectkmp.features.catalog.navigation.catalogNavGraph
 import francisco.simon.projectkmp.features.courses.navigation.coursesNavGraph

@@ -23,5 +23,4 @@ class AppViewModel(
             started = SharingStarted.Lazily,
             initialValue = AppState.Loading
         )
-
 }

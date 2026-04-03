@@ -1,21 +1,18 @@
 package francisco.simon.projectkmp.ui.navigation
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import francisco.simon.projectkmp.navigation.routeClass
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -26,37 +23,28 @@ internal fun AppNavigationBar(
 ) {
     NavigationBar {
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
-        val closestNavGraphDestination = currentBackStackEntry?.destination?.hierarchy?.first {
-            it is NavGraph
-        }
-        val closestNavGraphClass = closestNavGraphDestination.routeClass()
-        val currentTab = tabs.firstOrNull {
-            it.graph::class == closestNavGraphClass
-        }
+        val currentDestination = currentBackStackEntry?.destination
         tabs.forEach { tab ->
-            NavigationItem(currentTab, tab, navController)
+            NavigationItem(currentDestination, tab, navController)
         }
     }
 }
 
 @Composable
 private fun RowScope.NavigationItem(
-    currentTab: AppTab?,
+    currentDestination: NavDestination?,
     tab: AppTab,
     navController: NavController
 ) {
     NavigationBarItem(
-        selected = currentTab == tab,
+        selected = currentDestination?.hierarchy?.any { it.hasRoute(tab.graph::class) } == true,
         onClick = {
-            if (currentTab != null) {
-                navController.navigate(tab.graph) {
-                    popUpTo(currentTab.graph) {
-                        saveState = true
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
+            navController.navigate(tab.graph) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
                 }
+                launchSingleTop = true
+                restoreState = true
             }
         },
         icon = {
@@ -70,18 +58,13 @@ private fun RowScope.NavigationItem(
 
 @Composable
 private fun NavigationBarLabel(tab: AppTab) {
-    Text(
-        text = stringResource(tab.labelRes),
-        style = MaterialTheme.typography.labelMedium
-    )
+    Text(stringResource(tab.labelRes))
 }
 
 @Composable
 private fun NavigationBarIcon(tab: AppTab) {
     Icon(
         painter = painterResource(tab.iconRes),
-        contentDescription = null,
-        modifier = Modifier
-            .size(16.dp)
+        contentDescription = null
     )
 }

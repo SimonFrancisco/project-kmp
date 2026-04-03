@@ -15,7 +15,7 @@ import francisco.simon.projectkmp.features.auth.navigation.AuthRoute
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
 import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
 import francisco.simon.projectkmp.navigation.AppNavGraph
-import francisco.simon.projectkmp.navigation.routeClass
+import francisco.simon.projectkmp.navigation.matches
 import francisco.simon.projectkmp.ui.navigation.AppNavigationBar
 import francisco.simon.projectkmp.ui.navigation.mainTabs
 import francisco.simon.projectkmp.ui.theme.ProjectKmp
@@ -61,7 +61,10 @@ private fun BottomBarSettings(
     currentBackStackEntry: NavBackStackEntry?,
     navController: NavHostController
 ) {
-    if (currentBackStackEntry != null && currentBackStackEntry.routeClass() !in hiddenBottomBarRoutes) {
+    val shouldShow = currentBackStackEntry != null &&
+        hiddenBottomBarRoutes.none { currentBackStackEntry.destination.matches(it) }
+
+    if (shouldShow) {
         AppNavigationBar(
             navController = navController,
             tabs = mainTabs
