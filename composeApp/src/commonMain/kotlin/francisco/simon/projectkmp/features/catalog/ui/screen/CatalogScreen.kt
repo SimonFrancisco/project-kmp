@@ -53,7 +53,7 @@ fun CatalogScreen(
     }
     EffectsConsumer(viewModel.effects) { effect ->
         when (effect) {
-            is CatalogScreenEffects.NavigateToCourseDetail -> {
+            is CatalogScreenEffect.NavigateToCourseDetail -> {
                 onOpenDetailScreen(effect.courseId)
             }
         }

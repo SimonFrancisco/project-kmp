@@ -9,6 +9,10 @@ import francisco.simon.projectkmp.features.auth.prefs.TokenStorage
 import francisco.simon.projectkmp.features.auth.prefs.TokenStorageImpl
 import francisco.simon.projectkmp.features.catalog.data.CatalogRepositoryImpl
 import francisco.simon.projectkmp.features.catalog.domain.repository.CatalogRepository
+import francisco.simon.projectkmp.features.onboarding.data.OnboardingRepositoryImpl
+import francisco.simon.projectkmp.features.onboarding.domain.repository.OnboardingRepository
+import francisco.simon.projectkmp.features.onboarding.prefs.OnboardingManager
+import francisco.simon.projectkmp.features.onboarding.prefs.OnboardingManagerImpl
 import francisco.simon.projectkmp.features.search.data.SearchRepositoryImpl
 import francisco.simon.projectkmp.features.search.domain.repository.SearchRepository
 import org.koin.core.module.dsl.bind
@@ -53,5 +57,13 @@ internal val dataModule = module {
 
     singleOf(constructor = ::TokenStorageImpl) {
         bind<TokenStorage>()
+    }
+
+    singleOf(constructor = ::OnboardingManagerImpl) {
+        bind<OnboardingManager>()
+    }
+
+    singleOf(constructor = ::OnboardingRepositoryImpl) {
+        bind<OnboardingRepository>()
     }
 }

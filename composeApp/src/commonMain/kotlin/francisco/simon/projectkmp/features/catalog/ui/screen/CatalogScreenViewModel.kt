@@ -41,7 +41,7 @@ class CatalogScreenViewModel(
     private val _state = MutableStateFlow<CatalogScreenState>(CatalogScreenState.Loading)
     val state: StateFlow<CatalogScreenState> = _state.asStateFlow()
 
-    private val _effects: MutableSharedFlow<CatalogScreenEffects> = MutableSharedFlow()
+    private val _effects: MutableSharedFlow<CatalogScreenEffect> = MutableSharedFlow()
     val effects = _effects.asSharedFlow()
 
     init {
@@ -112,10 +112,16 @@ class CatalogScreenViewModel(
         }
     }
 
+    private fun handleCourseClicked(courseId: Int) {
+        viewModelScope.launch {
+            _effects.emit(CatalogScreenEffect.NavigateToCourseDetail(courseId))
+        }
+    }
+
     fun onHandleIntents(intent: CatalogScreenIntent) {
         when (intent) {
             is CatalogScreenIntent.CourseClicked -> {
-                _effects.tryEmit(CatalogScreenEffects.NavigateToCourseDetail(intent.courseId))
+                handleCourseClicked(intent.courseId)
             }
             CatalogScreenIntent.LoadMoreCourses -> loadNextCourses()
             CatalogScreenIntent.Refresh -> refresh()

@@ -1,26 +1,26 @@
-package francisco.simon.projectkmp.features.auth.ui
+package francisco.simon.projectkmp.features.auth.ui.webView
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import francisco.simon.projectkmp.features.auth.data.StepikAuthConfig
 import francisco.simon.projectkmp.features.auth.StepikAuthWebView
+import francisco.simon.projectkmp.features.auth.data.StepikAuthConfig
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AuthScreen(
+fun WebViewAuthScreen(
     onAuthFinished: () -> Unit,
     onNavigateBack: () -> Unit,
-    viewModel: AuthScreenViewModel = koinViewModel()
+    viewModel: WebViewAuthScreenViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     when (val current = state) {
-        is AuthScreenState.WebViewAuth -> {
+        is WebViewAuthScreenState.WebViewAuth -> {
             StepikAuthWebView(
                 authorizeUrl = StepikAuthConfig.buildAuthorizeUrl(),
                 redirectUri = StepikAuthConfig.REDIRECT_URI,
@@ -28,11 +28,11 @@ fun AuthScreen(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        is AuthScreenState.Loading -> {
+        is WebViewAuthScreenState.Loading -> {
             FullScreenLoading()
         }
-        is AuthScreenState.Success -> { onAuthFinished() }
-        is AuthScreenState.Error -> RetryCall(
+        is WebViewAuthScreenState.Success -> { onAuthFinished() }
+        is WebViewAuthScreenState.Error -> RetryCall(
             errorRes = current.errorMessageRes,
             onClick = onNavigateBack
         )

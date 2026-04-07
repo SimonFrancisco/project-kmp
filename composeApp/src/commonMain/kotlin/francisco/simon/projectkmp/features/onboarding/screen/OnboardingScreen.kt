@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import francisco.simon.projectkmp.ui.components.ProceedButton
 import francisco.simon.projectkmp.ui.theme.paddingMedium
+import francisco.simon.projectkmp.ui.utils.EffectsConsumer
+import org.koin.compose.viewmodel.koinViewModel
 import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.onboarding_button_text
 
@@ -18,20 +20,28 @@ private const val ONBOARDING_IMAGE_LINK =
 
 @Composable
 fun OnboardingScreen(
-    onNavigateToCatalogScreen: () -> Unit,
+    onOpenAuthScreen: () -> Unit,
+    viewModel: OnBoardingScreenViewModel = koinViewModel()
 ) {
     Scaffold { innerPaddings ->
         OnboardingScreenContent(
-            onNavigateToCatalogScreen = onNavigateToCatalogScreen,
-            modifier = Modifier.padding(innerPaddings)
+            modifier = Modifier.padding(innerPaddings),
+            onIntent = viewModel::onHandleIntent
         )
+    }
+    EffectsConsumer(viewModel.effects) { effect ->
+        when (effect) {
+            is OnBoardingScreenEffect.NavigateToAuthScreen -> {
+                onOpenAuthScreen()
+            }
+        }
     }
 }
 
 @Composable
 private fun OnboardingScreenContent(
-    onNavigateToCatalogScreen: () -> Unit,
     modifier: Modifier = Modifier,
+    onIntent: (OnBoardingScreenIntent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -44,7 +54,9 @@ private fun OnboardingScreenContent(
             Modifier.weight(1f)
         )
         ProceedButton(
-            onNavigateToCatalogScreen,
+            onClick = {
+                onIntent(OnBoardingScreenIntent.CompleteOnBoarding)
+            },
             buttonText = Res.string.onboarding_button_text
         )
     }
@@ -59,7 +71,7 @@ private val vkRandomPictures = listOf<String>(
 @Composable
 @Preview(showBackground = true)
 private fun OnboardingScreenPreview() {
-    OnboardingScreen(
-        onNavigateToCatalogScreen = {},
+    OnboardingScreenContent(
+        onIntent = {},
     )
 }
