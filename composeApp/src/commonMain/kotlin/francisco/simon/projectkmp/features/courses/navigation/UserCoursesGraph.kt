@@ -3,7 +3,7 @@ package francisco.simon.projectkmp.features.courses.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object CoursesGraph {
+data object UserCoursesGraph {
 
     @Serializable
     data object CoursesRoute

@@ -8,6 +8,8 @@ import kotlinx.serialization.Serializable
 data class CourseDto(
     @SerialName("id")
     val id: Int,
+    @SerialName("title")
+    val title: String,
     @SerialName("summary")
     val summary: String,
     @SerialName("cover")
@@ -15,15 +17,25 @@ data class CourseDto(
     @SerialName("workload")
     val workload: String,
     @SerialName("description")
-    val description: String
+    val description: String,
+    @SerialName("learners_count")
+    val participants: Int,
+    @SerialName("is_paid")
+    val isPaid: Boolean,
+    @SerialName("display_price")
+    val priceDisplayed: String?
 )
 
-internal fun CourseDto.toDomain(): Course{
+internal fun CourseDto.toDomain(): Course {
     return Course(
         id = id,
         summary = summary,
+        title = title,
         cover = cover,
         workload = workload,
-        description = description
+        description = description,
+        participants = participants,
+        isPaid = isPaid,
+        priceDisplayed = priceDisplayed
     )
 }

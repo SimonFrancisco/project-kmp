@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.features.catalog.ui.model.CoursesUI
+import francisco.simon.projectkmp.ui.components.CourseCard
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
 import francisco.simon.projectkmp.ui.utils.EffectsConsumer
@@ -78,9 +80,11 @@ private fun CatalogScreenContent(
                     onClick = { onIntent(CatalogScreenIntent.TryAgain) }
                 )
             }
+
             is CatalogScreenState.Loading -> {
                 FullScreenLoading()
             }
+
             is CatalogScreenState.Success -> {
                 PullToRefreshBox(
                     isRefreshing = refreshLoading,
@@ -127,18 +131,20 @@ private fun CatalogList(
                 )
                 Spacer(Modifier.height(12.dp))
                 LazyHorizontalGrid(
+                    modifier = Modifier.height(240.dp),
                     rows = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp)
                 ) {
                     items(courseUi.courses, key = { it.id }) { course ->
-                        CatalogCard(course, onCardClicked = {
-                            onGoToDetailedInfo(it)
-                        })
+                        CourseCard(
+                            modifier = Modifier.width(300.dp),
+                            course = course,
+                            onCardClicked = {
+                                onGoToDetailedInfo(it)
+                            }
+                        )
                     }
                 }
             }

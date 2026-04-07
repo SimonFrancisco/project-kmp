@@ -13,4 +13,5 @@
     <string name="search_bottom_bar_label">Search</string>
     <string name="profile_bottom_bar_label">Profile</string>
     <string name="search_place_holder">Search</string>
+    <string name="free_course_label">Free</string>
 </resources>

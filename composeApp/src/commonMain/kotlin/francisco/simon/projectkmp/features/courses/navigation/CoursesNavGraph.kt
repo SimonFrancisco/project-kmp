@@ -1,17 +1,32 @@
 package francisco.simon.projectkmp.features.courses.navigation
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import francisco.simon.projectkmp.features.courses.navigation.CoursesGraph.CourseDetailRoute
-import francisco.simon.projectkmp.features.courses.navigation.CoursesGraph.CoursesRoute
-import francisco.simon.projectkmp.features.courses.screen.CoursesScreen
+import androidx.navigation.toRoute
+import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
+import francisco.simon.projectkmp.features.common.CourseDetailScreen
+import francisco.simon.projectkmp.features.courses.navigation.UserCoursesGraph.CourseDetailRoute
+import francisco.simon.projectkmp.features.courses.navigation.UserCoursesGraph.CoursesRoute
+import francisco.simon.projectkmp.features.courses.screen.UserCourseScreen
 
-fun NavGraphBuilder.coursesNavGraph() {
-    navigation<CoursesGraph>(startDestination = CoursesRoute) {
+fun NavGraphBuilder.userCoursesNavGraph(
+    navController: NavController
+) {
+    navigation<UserCoursesGraph>(startDestination = CoursesRoute) {
         composable<CoursesRoute> {
-            CoursesScreen()
+            UserCourseScreen(
+                onOpenDetailScreen = { courseId ->
+                    navController.navigate(CourseDetailRoute(courseId))
+                }
+            )
         }
-        composable<CourseDetailRoute>{}
+        composable<CourseDetailRoute> { entry ->
+            val route: CatalogGraph.CourseDetailRoute = entry.toRoute()
+            CourseDetailScreen(
+                courseId = route.courseId
+            )
+        }
     }
 }

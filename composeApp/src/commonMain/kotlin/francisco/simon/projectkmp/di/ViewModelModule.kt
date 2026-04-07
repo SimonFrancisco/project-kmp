@@ -5,6 +5,7 @@ import francisco.simon.projectkmp.features.auth.ui.auth.AuthScreenViewModel
 import francisco.simon.projectkmp.features.auth.ui.webView.WebViewAuthScreenViewModel
 import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreenViewModel
 import francisco.simon.projectkmp.features.common.CourseDetailScreenViewModel
+import francisco.simon.projectkmp.features.courses.screen.UserCourseScreenViewModel
 import francisco.simon.projectkmp.features.onboarding.screen.OnBoardingScreenViewModel
 import francisco.simon.projectkmp.features.search.screen.SearchScreenViewModel
 import org.koin.core.module.dsl.viewModel
@@ -17,6 +18,7 @@ internal val viewModelModule = module {
     viewModelOf(constructor = ::OnBoardingScreenViewModel)
     viewModelOf(constructor = ::CatalogScreenViewModel)
     viewModelOf(constructor = ::SearchScreenViewModel)
+    viewModelOf(constructor = ::UserCourseScreenViewModel)
     viewModelOf(constructor = ::AppViewModel)
 
     viewModel { params ->

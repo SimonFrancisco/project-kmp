@@ -6,6 +6,7 @@ import francisco.simon.projectkmp.features.auth.domain.usecase.LoginUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.GetCatalogCoursesUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.RefreshUseCase
+import francisco.simon.projectkmp.features.courses.domain.usecase.GetUserCoursesUseCase
 import francisco.simon.projectkmp.features.onboarding.domain.usecase.CompleteOnboardingUseCase
 import francisco.simon.projectkmp.features.search.domain.usecase.LoadNextSearchPageUseCase
 import francisco.simon.projectkmp.features.search.domain.usecase.SearchCoursesUseCase
@@ -22,4 +23,5 @@ internal val useCaseModule = module {
     factoryOf(constructor = ::LoadNextSearchPageUseCase)
     factoryOf(constructor = ::LoginUseCase)
     factoryOf(constructor = ::RefreshUseCase)
+    factoryOf(constructor = ::GetUserCoursesUseCase)
 }

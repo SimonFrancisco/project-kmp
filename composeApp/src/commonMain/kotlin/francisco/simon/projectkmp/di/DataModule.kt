@@ -9,6 +9,8 @@ import francisco.simon.projectkmp.features.auth.prefs.TokenStorage
 import francisco.simon.projectkmp.features.auth.prefs.TokenStorageImpl
 import francisco.simon.projectkmp.features.catalog.data.CatalogRepositoryImpl
 import francisco.simon.projectkmp.features.catalog.domain.repository.CatalogRepository
+import francisco.simon.projectkmp.features.courses.data.UserCoursesRepositoryImpl
+import francisco.simon.projectkmp.features.courses.domain.repository.UserCoursesRepository
 import francisco.simon.projectkmp.features.onboarding.data.OnboardingRepositoryImpl
 import francisco.simon.projectkmp.features.onboarding.domain.repository.OnboardingRepository
 import francisco.simon.projectkmp.features.onboarding.prefs.OnboardingManager
@@ -51,6 +53,12 @@ internal val dataModule = module {
 
     single<SearchRepository> {
         SearchRepositoryImpl(
+            httpClient = get(qualifier = AUTH_CLIENT)
+        )
+    }
+
+    single<UserCoursesRepository> {
+        UserCoursesRepositoryImpl(
             httpClient = get(qualifier = AUTH_CLIENT)
         )
     }
