@@ -20,6 +20,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.features.catalog.ui.model.CoursesUI
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.utils.EffectsConsumer
 import francisco.simon.projectkmp.ui.utils.LoadMorePages
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -37,28 +39,34 @@ fun CatalogScreen(
     viewModel: CatalogScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-    val nextDataIsLoading = viewModel.showLoading.collectAsStateWithLifecycle()
+    val nextDataIsLoading = viewModel.showPaginationLoading.collectAsStateWithLifecycle()
+    val refreshLoading = viewModel.showRefreshLoading.collectAsStateWithLifecycle()
 
     Scaffold { innerPadding ->
         CatalogScreenContent(
             modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
             state = state.value,
-            onGoToDetailedInfo = onOpenDetailScreen,
-            onTryAgain = viewModel::retry,
             nextDataIsLoading = nextDataIsLoading.value,
-            loadNextCourses = viewModel::loadNextCourses
+            refreshLoading = refreshLoading.value,
+            onIntent = viewModel::onHandleIntents
         )
+    }
+    EffectsConsumer(viewModel.effects) { effect ->
+        when (effect) {
+            is CatalogScreenEffects.NavigateToCourseDetail -> {
+                onOpenDetailScreen(effect.courseId)
+            }
+        }
     }
 }
 
 @Composable
 private fun CatalogScreenContent(
     modifier: Modifier = Modifier,
-    state: CatalogScreenState,
-    onGoToDetailedInfo: (Int) -> Unit,
-    onTryAgain: () -> Unit,
     nextDataIsLoading: Boolean,
-    loadNextCourses: () -> Unit,
+    refreshLoading: Boolean,
+    state: CatalogScreenState,
+    onIntent: (CatalogScreenIntent) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -67,21 +75,24 @@ private fun CatalogScreenContent(
             is CatalogScreenState.Error -> {
                 RetryCall(
                     errorRes = state.errorMessageRes,
-                    onClick = onTryAgain
+                    onClick = { onIntent(CatalogScreenIntent.TryAgain) }
                 )
             }
-
             is CatalogScreenState.Loading -> {
                 FullScreenLoading()
             }
-
             is CatalogScreenState.Success -> {
-                CatalogList(
-                    onGoToDetailedInfo = onGoToDetailedInfo,
-                    courses = state.courses,
-                    nextDataIsLoading = nextDataIsLoading,
-                    loadNextCourses = loadNextCourses
-                )
+                PullToRefreshBox(
+                    isRefreshing = refreshLoading,
+                    onRefresh = { onIntent(CatalogScreenIntent.Refresh) },
+                ) {
+                    CatalogList(
+                        onGoToDetailedInfo = { onIntent(CatalogScreenIntent.CourseClicked(it)) },
+                        courses = state.courses,
+                        nextDataIsLoading = nextDataIsLoading,
+                        loadNextCourses = { onIntent(CatalogScreenIntent.LoadMoreCourses) }
+                    )
+                }
             }
         }
     }
@@ -107,7 +118,7 @@ private fun CatalogList(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        items(courses, key = {  coursersUi -> coursersUi.id }) {courseUi ->
+        items(courses, key = { coursersUi -> coursersUi.id }) { courseUi ->
             Column {
                 Text(
                     text = courseUi.title,
@@ -131,7 +142,6 @@ private fun CatalogList(
                     }
                 }
             }
-
         }
         item {
             if (nextDataIsLoading) {
@@ -146,5 +156,4 @@ private fun CatalogList(
             }
         }
     }
-
 }

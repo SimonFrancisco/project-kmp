@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 
 class TokenStorageImpl(
     private val dataStore: DataStore<Preferences>
-): TokenStorage {
+) : TokenStorage {
 
     private companion object Keys {
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
@@ -26,7 +26,9 @@ class TokenStorageImpl(
 
             if (access != null && refresh != null) {
                 BearerTokens(access, refresh)
-            } else null
+            } else {
+                null
+            }
         }
 
     override suspend fun getTokens(): BearerTokens? {

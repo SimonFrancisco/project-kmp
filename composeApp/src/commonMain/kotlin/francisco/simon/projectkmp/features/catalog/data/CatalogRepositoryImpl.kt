@@ -53,7 +53,6 @@ class CatalogRepositoryImpl(
         }.retry(RETRY_TIMES)
         .flowOn(Dispatchers.IO)
 
-
     override fun getCourses(): Flow<List<Courses>> {
         return loadedListFlow
     }
@@ -62,4 +61,10 @@ class CatalogRepositoryImpl(
         loadTrigger.emit(Unit)
     }
 
+    override suspend fun refresh() {
+        nextPage = FIRST_PAGE
+        hasNext = true
+        _coursesTemp.clear()
+        loadTrigger.emit(Unit)
+    }
 }

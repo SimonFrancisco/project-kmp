@@ -10,7 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun <T> EventConsumer(flow: SharedFlow<T>, block: (T) -> Unit) {
+fun <T> EffectsConsumer(flow: SharedFlow<T>, block: (T) -> Unit) {
     val blockState by rememberUpdatedState(block)
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(flow, lifecycleOwner) {
