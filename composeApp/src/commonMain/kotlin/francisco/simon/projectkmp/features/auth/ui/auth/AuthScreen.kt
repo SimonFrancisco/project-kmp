@@ -1,5 +1,6 @@
 package francisco.simon.projectkmp.features.auth.ui.auth
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,16 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.components.ProceedButton
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.utils.EffectsConsumer
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.auth_login_button_text
-
-private const val STEPIK_LOG =
-    "https://upload.wikimedia.org/wikipedia/commons/4/42/Stepik_logotype.png"
+import projectkmp.composeapp.generated.resources.ic_stepik
 
 @Composable
 fun AuthScreen(
@@ -52,11 +51,12 @@ private fun AuthScreenContent(
             .padding(paddingMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CustomAsyncImage(
-            model = STEPIK_LOG,
+        Image(
             modifier = Modifier
                 .weight(1f)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(16.dp)),
+            painter = painterResource(Res.drawable.ic_stepik),
+            contentDescription = null
         )
         ProceedButton(
             onClick = {

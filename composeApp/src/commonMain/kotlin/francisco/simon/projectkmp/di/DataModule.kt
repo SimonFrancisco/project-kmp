@@ -15,6 +15,8 @@ import francisco.simon.projectkmp.features.onboarding.data.OnboardingRepositoryI
 import francisco.simon.projectkmp.features.onboarding.domain.repository.OnboardingRepository
 import francisco.simon.projectkmp.features.onboarding.prefs.OnboardingManager
 import francisco.simon.projectkmp.features.onboarding.prefs.OnboardingManagerImpl
+import francisco.simon.projectkmp.features.profile.data.ProfileRepositoryImpl
+import francisco.simon.projectkmp.features.profile.domain.repository.ProfileRepository
 import francisco.simon.projectkmp.features.search.data.SearchRepositoryImpl
 import francisco.simon.projectkmp.features.search.domain.repository.SearchRepository
 import org.koin.core.module.dsl.bind
@@ -60,6 +62,13 @@ internal val dataModule = module {
     single<UserCoursesRepository> {
         UserCoursesRepositoryImpl(
             httpClient = get(qualifier = AUTH_CLIENT)
+        )
+    }
+
+    single<ProfileRepository> {
+        ProfileRepositoryImpl(
+            httpClient = get(qualifier = AUTH_CLIENT),
+            tokenStorage = get()
         )
     }
 

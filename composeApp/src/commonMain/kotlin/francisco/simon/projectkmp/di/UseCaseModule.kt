@@ -8,6 +8,8 @@ import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUs
 import francisco.simon.projectkmp.features.catalog.domain.usecase.RefreshUseCase
 import francisco.simon.projectkmp.features.courses.domain.usecase.GetUserCoursesUseCase
 import francisco.simon.projectkmp.features.onboarding.domain.usecase.CompleteOnboardingUseCase
+import francisco.simon.projectkmp.features.profile.domain.usecase.GetUserUseCase
+import francisco.simon.projectkmp.features.profile.domain.usecase.LogoutUseCase
 import francisco.simon.projectkmp.features.search.domain.usecase.LoadNextSearchPageUseCase
 import francisco.simon.projectkmp.features.search.domain.usecase.SearchCoursesUseCase
 import org.koin.core.module.dsl.factoryOf
@@ -24,4 +26,6 @@ internal val useCaseModule = module {
     factoryOf(constructor = ::LoginUseCase)
     factoryOf(constructor = ::RefreshUseCase)
     factoryOf(constructor = ::GetUserCoursesUseCase)
+    factoryOf(constructor = ::GetUserUseCase)
+    factoryOf(constructor = ::LogoutUseCase)
 }

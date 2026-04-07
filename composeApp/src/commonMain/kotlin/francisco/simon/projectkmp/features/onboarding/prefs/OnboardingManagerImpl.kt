@@ -27,6 +27,8 @@ class OnboardingManagerImpl(
     }
 
     override suspend fun clear() {
-        dataStore.edit { it.clear() }
+        dataStore.edit {
+            it.remove(ONBOARDING)
+        }
     }
 }

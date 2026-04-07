@@ -100,6 +100,7 @@ kotlin {
             implementation(libs.ktor.auth)
             implementation(libs.data.store)
             implementation(libs.data.store.preferences)
+            implementation(libs.kotlinx.datetime)
             api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         commonTest.dependencies {

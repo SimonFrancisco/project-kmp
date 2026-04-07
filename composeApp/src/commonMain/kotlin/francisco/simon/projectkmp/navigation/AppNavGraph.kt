@@ -30,7 +30,12 @@ internal fun AppNavGraph(
         composable<OnboardingRoute> {
             OnboardingScreen(
                 onOpenAuthScreen = {
-                    navController.navigate(AuthGraph)
+                    navController.navigate(AuthGraph) {
+                        popUpTo(OnboardingRoute) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }

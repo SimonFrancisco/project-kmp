@@ -11,12 +11,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import francisco.simon.projectkmp.ui.components.ProceedButton
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.utils.EffectsConsumer
+import org.jetbrains.compose.resources.DrawableResource
 import org.koin.compose.viewmodel.koinViewModel
 import projectkmp.composeapp.generated.resources.Res
+import projectkmp.composeapp.generated.resources.ic_stepik
 import projectkmp.composeapp.generated.resources.onboarding_button_text
-
-private const val ONBOARDING_IMAGE_LINK =
-    "https://upload.wikimedia.org/wikipedia/commons/4/42/Stepik_logotype.png"
 
 @Composable
 fun OnboardingScreen(
@@ -50,7 +49,7 @@ private fun OnboardingScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CarouselWithIndicators(
-            vkRandomPictures,
+            stepikRandomPictures,
             Modifier.weight(1f)
         )
         ProceedButton(
@@ -62,10 +61,10 @@ private fun OnboardingScreenContent(
     }
 }
 
-private val vkRandomPictures = listOf<String>(
-    ONBOARDING_IMAGE_LINK,
-    ONBOARDING_IMAGE_LINK,
-    ONBOARDING_IMAGE_LINK
+private val stepikRandomPictures = listOf<DrawableResource>(
+    Res.drawable.ic_stepik,
+    Res.drawable.ic_stepik,
+    Res.drawable.ic_stepik
 )
 
 @Composable

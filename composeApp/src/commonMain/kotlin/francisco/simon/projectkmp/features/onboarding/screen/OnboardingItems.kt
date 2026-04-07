@@ -1,5 +1,6 @@
 package francisco.simon.projectkmp.features.onboarding.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,15 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.paddingExtraSmall
 import francisco.simon.projectkmp.ui.theme.paddingLarge
 import francisco.simon.projectkmp.ui.theme.paddingMedium
 import francisco.simon.projectkmp.ui.theme.spaceMedium
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CarouselWithIndicators(
-    images: List<String>,
+    images: List<DrawableResource>,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState { images.size }
@@ -45,10 +47,11 @@ fun CarouselWithIndicators(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CustomAsyncImage(
-                    model = images[page],
+                Image(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp)),
+                    painter = painterResource(images[page]),
+                    contentDescription = null
                 )
             }
         }
@@ -75,4 +78,3 @@ fun CarouselWithIndicators(
         }
     }
 }
-

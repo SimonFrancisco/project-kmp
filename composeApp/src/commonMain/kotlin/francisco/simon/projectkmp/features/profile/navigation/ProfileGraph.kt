@@ -7,5 +7,4 @@ data object ProfileGraph {
 
     @Serializable
     data object ProfileRoute
-
 }

@@ -14,8 +14,13 @@ fun NavGraphBuilder.profileNavGraph(
     navigation<ProfileGraph>(startDestination = ProfileRoute) {
         composable<ProfileRoute> {
             ProfileScreen(
-                onNavigateToLogin = {
-                    navController.navigate(AuthGraph)
+                onOpenAuthScreen = {
+                    navController.navigate(AuthGraph) {
+                        popUpTo(ProfileGraph) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
