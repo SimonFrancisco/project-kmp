@@ -33,11 +33,13 @@ class AuthRepositoryImpl(
                 val response = httpClient.post(StepikAuthConfig.TOKEN_URL) {
                     header("Authorization", "Basic $basicAuth")
                     contentType(ContentType.Application.FormUrlEncoded)
-                    setBody(parameters {
-                        append("grant_type", "authorization_code")
-                        append("code", code)
-                        append("redirect_uri", StepikAuthConfig.REDIRECT_URI)
-                    }.formUrlEncode())
+                    setBody(
+                        parameters {
+                            append("grant_type", "authorization_code")
+                            append("code", code)
+                            append("redirect_uri", StepikAuthConfig.REDIRECT_URI)
+                        }.formUrlEncode()
+                    )
                 }
                 response.body<TokenDto>().toDomain()
             }
@@ -53,10 +55,12 @@ class AuthRepositoryImpl(
                 val response = httpClient.post(StepikAuthConfig.TOKEN_URL) {
                     header("Authorization", "Basic $basicAuth")
                     contentType(ContentType.Application.FormUrlEncoded)
-                    setBody(parameters {
-                        append("grant_type", "refresh_token")
-                        append("refresh_token", refreshToken)
-                    }.formUrlEncode())
+                    setBody(
+                        parameters {
+                            append("grant_type", "refresh_token")
+                            append("refresh_token", refreshToken)
+                        }.formUrlEncode()
+                    )
                 }
                 response.body<TokenDto>().toDomain()
             }

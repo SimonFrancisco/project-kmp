@@ -34,6 +34,9 @@ class UserCourseScreenViewModel(
     private val _effects: MutableSharedFlow<UserCourseScreenEffect> = MutableSharedFlow()
     val effects = _effects.asSharedFlow()
 
+    private val _showRefreshLoading = MutableStateFlow(false)
+    val showRefreshLoading = _showRefreshLoading.asStateFlow()
+
     init {
         loadCourses()
     }
@@ -46,15 +49,17 @@ class UserCourseScreenViewModel(
                     getUserCoursesUseCase().mapLatest { result ->
                         result.fold(
                             onSuccess = { courses ->
+                                _showRefreshLoading.update { false }
                                 UserCourseScreenState.Success(courses)
                             },
                             onFailure = {
+                                _showRefreshLoading.update { false }
                                 UserCourseScreenState.Error(Res.string.error_unknown)
                             }
                         )
                     }
                 }.collect { value ->
-                    _state.value = value
+                    _state.update { value }
                 }
         }
     }
@@ -62,6 +67,13 @@ class UserCourseScreenViewModel(
     private fun retry() {
         retryTrigger.tryEmit(Unit)
         _state.update { UserCourseScreenState.Loading }
+    }
+
+    private fun refresh() {
+        viewModelScope.launch {
+            _showRefreshLoading.update { true }
+            loadCourses()
+        }
     }
 
     private fun handleCourseClicked(courseId: Int) {
@@ -74,6 +86,7 @@ class UserCourseScreenViewModel(
         when (intent) {
             is UserCourseScreenIntent.CourseClicked -> handleCourseClicked(intent.courseId)
             UserCourseScreenIntent.TryAgain -> retry()
+            UserCourseScreenIntent.Refresh -> refresh()
         }
     }
 }

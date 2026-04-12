@@ -1,6 +1,7 @@
 package francisco.simon.projectkmp.features.common
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -18,7 +19,6 @@ fun CourseDetailScreen(
         parameters = { parametersOf(courseId) }
     )
 ) {
-
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold { innerPaddings ->
@@ -28,7 +28,6 @@ fun CourseDetailScreen(
             onTryAgain = viewModel::retry
         )
     }
-
 }
 
 @Composable
@@ -43,6 +42,7 @@ private fun CourseDetailScreenContent(
         when (state) {
             is CourseDetailScreenSate.Error -> {
                 RetryCall(
+                    modifier = Modifier.fillMaxSize(),
                     errorRes = state.errorMessageRes,
                     onClick = onTryAgain
                 )

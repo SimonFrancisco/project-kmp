@@ -4,13 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -18,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,11 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.features.catalog.ui.model.CoursesUI
-import francisco.simon.projectkmp.ui.components.CourseCard
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.components.courseCard.CourseCard
+import francisco.simon.projectkmp.ui.components.courseCard.CourseCardDefaults
 import francisco.simon.projectkmp.ui.utils.EffectsConsumer
 import francisco.simon.projectkmp.ui.utils.LoadMorePages
+import francisco.simon.projectkmp.ui.utils.VerticalSpacerSmall
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -46,7 +47,9 @@ fun CatalogScreen(
 
     Scaffold { innerPadding ->
         CatalogScreenContent(
-            modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding()),
             state = state.value,
             nextDataIsLoading = nextDataIsLoading.value,
             refreshLoading = refreshLoading.value,
@@ -71,11 +74,12 @@ private fun CatalogScreenContent(
     onIntent: (CatalogScreenIntent) -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
     ) {
         when (state) {
             is CatalogScreenState.Error -> {
                 RetryCall(
+                    modifier = Modifier.fillMaxSize(),
                     errorRes = state.errorMessageRes,
                     onClick = { onIntent(CatalogScreenIntent.TryAgain) }
                 )
@@ -117,29 +121,35 @@ private fun CatalogList(
         loadMoreData = loadNextCourses
     )
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         state = listState,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        contentPadding = PaddingValues(vertical = 16.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(courses, key = { coursersUi -> coursersUi.id }) { courseUi ->
             Column {
+                HorizontalDivider()
+                VerticalSpacerSmall()
                 Text(
                     text = courseUi.title,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
-                Spacer(Modifier.height(12.dp))
+                val numberOfRow = if (courseUi.courses.size > 1) 2 else 1
+                val spacing = 12.dp
+                val gridHeight = CourseCardDefaults.Height * numberOfRow + spacing * (numberOfRow - 1)
                 LazyHorizontalGrid(
-                    modifier = Modifier.height(240.dp),
-                    rows = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(gridHeight),
+                    rows = GridCells.Fixed(numberOfRow),
+                    horizontalArrangement = Arrangement.spacedBy(spacing),
+                    verticalArrangement = Arrangement.spacedBy(spacing),
+                    contentPadding = PaddingValues(16.dp)
                 ) {
                     items(courseUi.courses, key = { it.id }) { course ->
                         CourseCard(
-                            modifier = Modifier.width(300.dp),
+                            modifier = Modifier
+                                .width(300.dp),
                             course = course,
                             onCardClicked = {
                                 onGoToDetailedInfo(it)
@@ -149,12 +159,11 @@ private fun CatalogList(
                 }
             }
         }
-        item {
-            if (nextDataIsLoading) {
+        if (nextDataIsLoading) {
+            item {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

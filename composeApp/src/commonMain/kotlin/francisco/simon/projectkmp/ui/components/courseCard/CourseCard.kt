@@ -1,8 +1,7 @@
-package francisco.simon.projectkmp.ui.components
+package francisco.simon.projectkmp.ui.components.courseCard
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,11 +23,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.core.domain.entity.Course
+import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import francisco.simon.projectkmp.ui.theme.paddingSmall
 import francisco.simon.projectkmp.ui.utils.CORNER_SIZE_PERCENTAGE10
 import francisco.simon.projectkmp.ui.utils.HorizontalSpacerSmall
-import francisco.simon.projectkmp.ui.utils.VerticalSpacerSmall
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
@@ -44,6 +43,7 @@ fun CourseCard(
 ) {
     Card(
         modifier = modifier
+            .height(CourseCardDefaults.Height)
             .clickable {
                 onCardClicked(course.id)
             },
@@ -55,7 +55,6 @@ fun CourseCard(
         Row(
             modifier = Modifier
                 .padding(paddingSmall)
-                .height(IntrinsicSize.Min)
         ) {
             Column(
                 modifier = Modifier.fillMaxHeight()
@@ -64,7 +63,7 @@ fun CourseCard(
                     model = course.cover,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(80.dp)
                         .clip(RoundedCornerShape(corner = CornerSize(CORNER_SIZE_PERCENTAGE10)))
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -80,9 +79,10 @@ fun CourseCard(
             HorizontalSpacerSmall()
             Column(
                 modifier = Modifier.weight(1f)
+                    .fillMaxHeight()
             ) {
                 Text(
-                    text = course.title,
+                    text = course.title.trim(),
                     style = MaterialTheme.typography.titleSmall
                 )
                 Row(
@@ -98,9 +98,9 @@ fun CourseCard(
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
-                VerticalSpacerSmall()
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = course.summary,
+                    text = course.summary.trim(),
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis

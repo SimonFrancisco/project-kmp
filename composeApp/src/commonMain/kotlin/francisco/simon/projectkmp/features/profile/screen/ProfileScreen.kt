@@ -63,6 +63,8 @@ private fun ProfileScreenContent(
         when (state) {
             is ProfileScreenState.Error -> {
                 RetryCall(
+                    modifier = Modifier.fillMaxWidth()
+                        .weight(1f),
                     errorRes = state.errorMessageRes,
                     onClick = {
                         onIntent(ProfileScreenIntent.TryAgain)

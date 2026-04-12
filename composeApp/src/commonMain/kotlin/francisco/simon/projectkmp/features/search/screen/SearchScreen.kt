@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,9 +22,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import francisco.simon.projectkmp.core.domain.entity.Course
-import francisco.simon.projectkmp.ui.components.CourseCard
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.components.courseCard.CourseCard
 import francisco.simon.projectkmp.ui.utils.EffectsConsumer
 import francisco.simon.projectkmp.ui.utils.LoadMorePages
 import org.koin.compose.viewmodel.koinViewModel
@@ -84,6 +83,7 @@ private fun SearchScreenContent(
         when (state) {
             is SearchScreenState.Error -> {
                 RetryCall(
+                    modifier = Modifier.fillMaxSize(),
                     errorRes = state.errorMessageRes,
                     onClick = {
                         onIntent(SearchScreenIntent.TryAgain)
@@ -115,6 +115,7 @@ private fun SearchScreenContent(
 
 @Composable
 private fun SearchCourseList(
+    modifier: Modifier = Modifier,
     onGoToDetailedInfo: (Int) -> Unit,
     courses: List<Course>,
     nextDataIsLoading: Boolean,
@@ -127,6 +128,7 @@ private fun SearchCourseList(
         loadMoreData = loadNextCourses
     )
     LazyColumn(
+        modifier = modifier.fillMaxSize(),
         state = listState,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(16.dp)
@@ -138,13 +140,11 @@ private fun SearchCourseList(
                 onCardClicked = onGoToDetailedInfo
             )
         }
-
-        item {
-            if (nextDataIsLoading) {
+        if (nextDataIsLoading) {
+            item {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()

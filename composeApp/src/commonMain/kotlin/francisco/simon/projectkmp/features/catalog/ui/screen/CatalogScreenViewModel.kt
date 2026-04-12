@@ -31,6 +31,10 @@ class CatalogScreenViewModel(
     private val refreshUseCase: RefreshUseCase
 ) : ViewModel() {
 
+    private companion object {
+        const val NUMBER_OF_COURSES_AT_ONE = 10
+    }
+
     private val retryTrigger = MutableSharedFlow<Unit>()
     private val _showPaginationLoading = MutableStateFlow(false)
     val showPaginationLoading = _showPaginationLoading.asStateFlow()
@@ -60,14 +64,15 @@ class CatalogScreenViewModel(
                                     val sections =
                                         catalogs.map { catalog ->
                                             async {
-                                                getCoursesUseCase(catalog.courses).getOrNull()
-                                                    ?.let { courses ->
-                                                        CoursesUI(
-                                                            id = catalog.id,
-                                                            title = catalog.title,
-                                                            courses = courses
-                                                        )
-                                                    }
+                                                getCoursesUseCase(
+                                                    catalog.courses.take(NUMBER_OF_COURSES_AT_ONE)
+                                                ).getOrNull()?.let { courses ->
+                                                    CoursesUI(
+                                                        id = catalog.id,
+                                                        title = catalog.title,
+                                                        courses = courses
+                                                    )
+                                                }
                                             }
                                         }.awaitAll().filterNotNull()
                                     _showPaginationLoading.update { false }
@@ -123,6 +128,7 @@ class CatalogScreenViewModel(
             is CatalogScreenIntent.CourseClicked -> {
                 handleCourseClicked(intent.courseId)
             }
+
             CatalogScreenIntent.LoadMoreCourses -> loadNextCourses()
             CatalogScreenIntent.Refresh -> refresh()
             CatalogScreenIntent.TryAgain -> retry()

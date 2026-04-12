@@ -33,6 +33,7 @@ fun WebViewAuthScreen(
         }
         is WebViewAuthScreenState.Success -> { onAuthFinished() }
         is WebViewAuthScreenState.Error -> RetryCall(
+            modifier = Modifier.fillMaxSize(),
             errorRes = current.errorMessageRes,
             onClick = onNavigateBack
         )
