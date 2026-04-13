@@ -9,5 +9,6 @@ data class Course(
     val workload: String,
     val description: String,
     val isPaid: Boolean,
-    val priceDisplayed: String?
+    val priceDisplayed: String?,
+    val hasCertificate: Boolean
 )

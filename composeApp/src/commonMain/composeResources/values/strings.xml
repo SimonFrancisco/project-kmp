@@ -15,4 +15,5 @@
     <string name="search_place_holder">Search</string>
     <string name="free_course_label">Free</string>
     <string name="logout_button_label">Logout</string>
+    <string name="course_certificate_label">Certificate</string>
 </resources>

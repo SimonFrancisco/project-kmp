@@ -23,7 +23,9 @@ data class CourseDto(
     @SerialName("is_paid")
     val isPaid: Boolean,
     @SerialName("display_price")
-    val priceDisplayed: String?
+    val priceDisplayed: String?,
+    @SerialName("with_certificate")
+    val hasCertificate: Boolean
 )
 
 internal fun CourseDto.toDomain(): Course {
@@ -36,6 +38,7 @@ internal fun CourseDto.toDomain(): Course {
         description = description,
         participants = participants,
         isPaid = isPaid,
-        priceDisplayed = priceDisplayed
+        priceDisplayed = priceDisplayed,
+        hasCertificate = hasCertificate
     )
 }
