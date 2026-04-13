@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
-import francisco.simon.projectkmp.features.common.CourseDetailScreen
+import francisco.simon.projectkmp.features.common.tab.CourseDetailTabMainScreen
 import francisco.simon.projectkmp.features.courses.navigation.UserCoursesGraph.CourseDetailRoute
 import francisco.simon.projectkmp.features.courses.navigation.UserCoursesGraph.CoursesRoute
 import francisco.simon.projectkmp.features.courses.screen.UserCourseScreen
@@ -24,8 +24,8 @@ fun NavGraphBuilder.userCoursesNavGraph(
         }
         composable<CourseDetailRoute> { entry ->
             val route: CatalogGraph.CourseDetailRoute = entry.toRoute()
-            CourseDetailScreen(
-                courseId = route.courseId
+            CourseDetailTabMainScreen(
+                courseId = route.courseId,
             )
         }
     }

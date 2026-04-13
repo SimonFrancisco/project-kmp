@@ -2,8 +2,6 @@ package francisco.simon.projectkmp.features.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,14 +18,10 @@ fun CourseDetailScreen(
     )
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-
-    Scaffold { innerPaddings ->
-        CourseDetailScreenContent(
-            modifier = Modifier.padding(innerPaddings),
-            state = state.value,
-            onTryAgain = viewModel::retry
-        )
-    }
+    CourseDetailScreenContent(
+        state = state.value,
+        onTryAgain = viewModel::retry
+    )
 }
 
 @Composable
