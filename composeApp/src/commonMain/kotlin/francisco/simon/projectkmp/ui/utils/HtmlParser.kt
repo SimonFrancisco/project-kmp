@@ -26,7 +26,11 @@ fun String.htmlToAnnotatedString(): AnnotatedString {
 
         when {
             text != null -> {
-                builder.append(text.decodeHtml())
+                val cleaned = text.decodeHtml().trim()
+
+                if (cleaned.isNotEmpty()) {
+                    builder.append(cleaned)
+                }
             }
 
             tag != null -> {
@@ -34,7 +38,11 @@ fun String.htmlToAnnotatedString(): AnnotatedString {
 
                 when (tag) {
                     "br" -> {}
-                    "p" -> {}
+                    "p" -> {
+                        if (isClosing) {
+                            builder.append("\n")
+                        }
+                    }
                     "li" -> {
                         if (!isClosing) {
                             builder.append("- ")
@@ -98,6 +106,7 @@ private fun String.decodeHtml(): String {
         .replace("&gt;", ">")
         .replace("&quot;", "\"")
         .replace("&#39;", "'")
+        .replace(Regex("\\s+"), " ")
 }
 
 private fun extractHref(tag: String?): String? {
