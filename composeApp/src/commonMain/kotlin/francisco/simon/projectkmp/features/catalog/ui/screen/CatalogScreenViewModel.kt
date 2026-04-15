@@ -3,6 +3,7 @@ package francisco.simon.projectkmp.features.catalog.ui.screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import francisco.simon.projectkmp.core.domain.usecase.GetCoursesUseCase
+import francisco.simon.projectkmp.features.catalog.domain.entity.Courses
 import francisco.simon.projectkmp.features.catalog.domain.usecase.GetCatalogCoursesUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.RefreshUseCase
@@ -52,6 +53,18 @@ class CatalogScreenViewModel(
         loadCatalogs()
     }
 
+    private suspend fun loadSection(catalog: Courses): Result<CoursesUI> {
+        return getCoursesUseCase(
+            catalog.courses.take(NUMBER_OF_COURSES_AT_ONE)
+        ).map { courses ->
+            CoursesUI(
+                id = catalog.id,
+                title = catalog.title,
+                courses = courses
+            )
+        }
+    }
+
     private fun loadCatalogs() {
         viewModelScope.launch {
             retryTrigger
@@ -64,20 +77,19 @@ class CatalogScreenViewModel(
                                     val sections =
                                         catalogs.map { catalog ->
                                             async {
-                                                getCoursesUseCase(
-                                                    catalog.courses.take(NUMBER_OF_COURSES_AT_ONE)
-                                                ).getOrNull()?.let { courses ->
-                                                    CoursesUI(
-                                                        id = catalog.id,
-                                                        title = catalog.title,
-                                                        courses = courses
-                                                    )
-                                                }
+                                                loadSection(catalog)
                                             }
-                                        }.awaitAll().filterNotNull()
+                                        }.awaitAll()
+                                    val hasError = sections.any { it.isFailure }
                                     _showPaginationLoading.update { false }
                                     _showRefreshLoading.update { false }
-                                    CatalogScreenState.Success(sections)
+                                    if (hasError && sections.all { it.isFailure }) {
+                                        CatalogScreenState.Error(Res.string.error_unknown)
+                                    } else {
+                                        CatalogScreenState.Success(
+                                            sections.mapNotNull { it.getOrNull() }
+                                        )
+                                    }
                                 },
                                 onFailure = {
                                     _showPaginationLoading.update { false }

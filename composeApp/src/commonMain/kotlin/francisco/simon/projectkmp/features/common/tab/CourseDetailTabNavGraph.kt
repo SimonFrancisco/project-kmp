@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import francisco.simon.projectkmp.features.common.CourseDetailScreen
+import francisco.simon.projectkmp.features.common.screen.info.CourseDetailScreen
 
 @Composable
 fun CourseDetailNavGraph(

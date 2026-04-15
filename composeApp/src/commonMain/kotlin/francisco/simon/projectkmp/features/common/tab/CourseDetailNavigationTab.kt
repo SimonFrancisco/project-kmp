@@ -24,7 +24,7 @@ internal fun CourseDetailTabNavigation(
     navController: NavController,
     tabs: List<CourseDetailTab>,
 
-    ) {
+) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
 

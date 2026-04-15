@@ -4,7 +4,7 @@ import francisco.simon.projectkmp.app.AppViewModel
 import francisco.simon.projectkmp.features.auth.ui.auth.AuthScreenViewModel
 import francisco.simon.projectkmp.features.auth.ui.webView.WebViewAuthScreenViewModel
 import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreenViewModel
-import francisco.simon.projectkmp.features.common.CourseDetailScreenViewModel
+import francisco.simon.projectkmp.features.common.screen.info.CourseDetailInfoScreenViewModel
 import francisco.simon.projectkmp.features.courses.screen.UserCourseScreenViewModel
 import francisco.simon.projectkmp.features.onboarding.screen.OnBoardingScreenViewModel
 import francisco.simon.projectkmp.features.profile.screen.ProfileScreenViewModel
@@ -24,7 +24,7 @@ internal val viewModelModule = module {
     viewModelOf(constructor = ::AppViewModel)
 
     viewModel { params ->
-        CourseDetailScreenViewModel(
+        CourseDetailInfoScreenViewModel(
             courseId = params.get(),
             getCourseUseCase = get()
         )

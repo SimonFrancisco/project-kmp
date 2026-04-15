@@ -12,10 +12,10 @@ fun CourseDetailTabMainScreen(
     courseId: Int
 ) {
     val navController = rememberNavController()
-    Scaffold { innerPaddings ->
+    Scaffold { innerPadding ->
         Column {
             CourseDetailTabNavigation(
-                modifier = Modifier.padding(innerPaddings),
+                modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
                 navController = navController,
                 tabs = courseDetailTabs
             )

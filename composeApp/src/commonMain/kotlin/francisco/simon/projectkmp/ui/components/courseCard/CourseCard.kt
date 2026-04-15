@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.core.domain.entity.Course
+import francisco.simon.projectkmp.core.domain.entity.IntroVideo
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import francisco.simon.projectkmp.ui.theme.paddingSmall
@@ -141,7 +142,16 @@ private fun CourseCard() {
                 isPaid = true,
                 priceDisplayed = "8990 ₽",
                 workload = "",
-                hasCertificate = true
+                hasCertificate = true,
+                audience = "",
+                requirements = "",
+                sections = emptyList(),
+                introVideo = IntroVideo(id = 0, thumbnail = ""),
+                acquiredSkills = emptyList(),
+                language = "",
+                timeToComplete = 0L,
+                certificateRegularThreshold = 0,
+                certificateDistinctionThreshold = 0
             ),
             onCardClicked = {}
         )
