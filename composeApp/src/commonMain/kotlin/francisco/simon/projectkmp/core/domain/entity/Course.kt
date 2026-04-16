@@ -9,5 +9,15 @@ data class Course(
     val workload: String,
     val description: String,
     val isPaid: Boolean,
-    val priceDisplayed: String?
+    val priceDisplayed: String?,
+    val hasCertificate: Boolean,
+    val audience: String,
+    val requirements: String,
+    val sections: List<Int>,
+    val introVideo: IntroVideo?,
+    val acquiredSkills: List<String>,
+    val language: String,
+    val timeToComplete: Long,
+    val certificateRegularThreshold: Int?,
+    val certificateDistinctionThreshold: Int?
 )

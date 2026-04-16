@@ -1,4 +1,4 @@
-package francisco.simon.projectkmp.features.common
+package francisco.simon.projectkmp.features.common.screen.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,13 +10,13 @@ import kotlinx.coroutines.launch
 import projectkmp.composeapp.generated.resources.Res
 import projectkmp.composeapp.generated.resources.error_unknown
 
-class CourseDetailScreenViewModel(
+class CourseDetailInfoScreenViewModel(
     private val courseId: Int,
     private val getCourseUseCase: GetCourseUseCase
 ) : ViewModel() {
 
-    private val _state: MutableStateFlow<CourseDetailScreenSate> = MutableStateFlow(
-        CourseDetailScreenSate.Loading
+    private val _state: MutableStateFlow<CourseDetailInfoScreenSate> = MutableStateFlow(
+        CourseDetailInfoScreenSate.Loading
     )
     val state = _state.asStateFlow()
 
@@ -27,16 +27,16 @@ class CourseDetailScreenViewModel(
     private fun loadCourse() {
         viewModelScope.launch {
             _state.update {
-                CourseDetailScreenSate.Loading
+                CourseDetailInfoScreenSate.Loading
             }
             getCourseUseCase(courseId)
                 .onSuccess { course ->
                     _state.update {
-                        CourseDetailScreenSate.Success(course)
+                        CourseDetailInfoScreenSate.Success(course)
                     }
                 }.onFailure {
                     _state.update {
-                        CourseDetailScreenSate.Error(Res.string.error_unknown)
+                        CourseDetailInfoScreenSate.Error(Res.string.error_unknown)
                     }
                 }
         }

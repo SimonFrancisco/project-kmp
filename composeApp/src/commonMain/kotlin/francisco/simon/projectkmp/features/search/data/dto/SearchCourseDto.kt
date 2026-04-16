@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SearchCourseDto(
     @SerialName("course")
-    val id: Int
+    val id: Int?
 )

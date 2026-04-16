@@ -15,4 +15,16 @@
     <string name="search_place_holder">Search</string>
     <string name="free_course_label">Free</string>
     <string name="logout_button_label">Logout</string>
+    <string name="course_certificate_label">Certificate</string>
+    <string name="information_course_detail_tab_label">Info</string>
+    <string name="review_course_detail_tab_label">Review</string>
+    <string name="units_course_detail_tab_label">Units</string>
+    <string name="topics_to_be_learned">To be learned</string>
+    <string name="about_course">About the course</string>
+    <string name="course_requirements">Requirements</string>
+    <string name="course_audience">Target audience</string>
+    <string name="course_time">Time to finish the course</string>
+    <string name="course_unit_text">Coming soon!</string>
+    <string name="profile_registration_label">Registered</string>
+    <string name="profile_about_label">About</string>
 </resources>

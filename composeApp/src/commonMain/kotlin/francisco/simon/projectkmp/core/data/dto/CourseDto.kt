@@ -23,7 +23,27 @@ data class CourseDto(
     @SerialName("is_paid")
     val isPaid: Boolean,
     @SerialName("display_price")
-    val priceDisplayed: String?
+    val priceDisplayed: String?,
+    @SerialName("with_certificate")
+    val hasCertificate: Boolean,
+    @SerialName("target_audience")
+    val audience: String,
+    @SerialName("requirements")
+    val requirements: String,
+    @SerialName("sections")
+    val sections: List<Int>,
+    @SerialName("intro_video")
+    val introVideo: IntroVideoDto?,
+    @SerialName("acquired_skills")
+    val acquiredSkills: List<String>,
+    @SerialName("language")
+    val language: String,
+    @SerialName("time_to_complete")
+    val timeToComplete: Long,
+    @SerialName("certificate_regular_threshold")
+    val certificateRegularThreshold: Int?,
+    @SerialName("certificate_distinction_threshold")
+    val certificateDistinctionThreshold: Int?
 )
 
 internal fun CourseDto.toDomain(): Course {
@@ -36,6 +56,16 @@ internal fun CourseDto.toDomain(): Course {
         description = description,
         participants = participants,
         isPaid = isPaid,
-        priceDisplayed = priceDisplayed
+        priceDisplayed = priceDisplayed,
+        hasCertificate = hasCertificate,
+        audience = audience,
+        requirements = requirements,
+        sections = sections,
+        introVideo = introVideo?.toDomain(),
+        acquiredSkills = acquiredSkills,
+        language = language,
+        timeToComplete = timeToComplete,
+        certificateRegularThreshold = certificateDistinctionThreshold,
+        certificateDistinctionThreshold = certificateDistinctionThreshold
     )
 }

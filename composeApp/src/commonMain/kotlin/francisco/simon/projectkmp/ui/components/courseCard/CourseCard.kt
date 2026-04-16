@@ -23,15 +23,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import francisco.simon.projectkmp.core.domain.entity.Course
+import francisco.simon.projectkmp.core.domain.entity.IntroVideo
 import francisco.simon.projectkmp.ui.components.CustomAsyncImage
 import francisco.simon.projectkmp.ui.theme.ProjectKmp
 import francisco.simon.projectkmp.ui.theme.paddingSmall
 import francisco.simon.projectkmp.ui.utils.CORNER_SIZE_PERCENTAGE10
+import francisco.simon.projectkmp.ui.utils.HorizontalSpacerExtraSmall
 import francisco.simon.projectkmp.ui.utils.HorizontalSpacerSmall
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import projectkmp.composeapp.generated.resources.Res
+import projectkmp.composeapp.generated.resources.course_certificate_label
 import projectkmp.composeapp.generated.resources.free_course_label
+import projectkmp.composeapp.generated.resources.ic_cerficate
 import projectkmp.composeapp.generated.resources.ic_groups
 
 @Suppress("LongMethod")
@@ -92,11 +96,23 @@ fun CourseCard(
                         painter = painterResource(Res.drawable.ic_groups),
                         contentDescription = null
                     )
-                    HorizontalSpacerSmall()
+                    HorizontalSpacerExtraSmall()
                     Text(
                         text = "${course.participants}",
                         style = MaterialTheme.typography.labelMedium
                     )
+                    if (course.hasCertificate) {
+                        HorizontalSpacerSmall()
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_cerficate),
+                            contentDescription = null
+                        )
+                        HorizontalSpacerExtraSmall()
+                        Text(
+                            text = stringResource(Res.string.course_certificate_label),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
@@ -125,7 +141,17 @@ private fun CourseCard() {
                 cover = "https://cdn.stepik.net/media/cache/images/courses/232639/cover_1PhLP3m/83e6c9315bb1ceb87a760a8388e26a76.png",
                 isPaid = true,
                 priceDisplayed = "8990 ₽",
-                workload = ""
+                workload = "",
+                hasCertificate = true,
+                audience = "",
+                requirements = "",
+                sections = emptyList(),
+                introVideo = IntroVideo(id = 0, thumbnail = ""),
+                acquiredSkills = emptyList(),
+                language = "",
+                timeToComplete = 0L,
+                certificateRegularThreshold = 0,
+                certificateDistinctionThreshold = 0
             ),
             onCardClicked = {}
         )

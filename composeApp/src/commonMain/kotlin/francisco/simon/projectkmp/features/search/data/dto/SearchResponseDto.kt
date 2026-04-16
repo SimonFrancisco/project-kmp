@@ -12,7 +12,7 @@ data class SearchResponseDto(
 )
 
 fun SearchResponseDto.toListId(): List<Int> {
-    return courses.map {
+    return courses.mapNotNull {
         it.id
     }
 }

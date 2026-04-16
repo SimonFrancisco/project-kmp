@@ -1,9 +1,7 @@
-package francisco.simon.projectkmp.features.common
+package francisco.simon.projectkmp.features.common.screen.info
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,32 +13,28 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun CourseDetailScreen(
     courseId: Int,
-    viewModel: CourseDetailScreenViewModel = koinViewModel(
+    viewModel: CourseDetailInfoScreenViewModel = koinViewModel(
         parameters = { parametersOf(courseId) }
     )
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle()
-
-    Scaffold { innerPaddings ->
-        CourseDetailScreenContent(
-            modifier = Modifier.padding(innerPaddings),
-            state = state.value,
-            onTryAgain = viewModel::retry
-        )
-    }
+    CourseDetailScreenContent(
+        state = state.value,
+        onTryAgain = viewModel::retry
+    )
 }
 
 @Composable
 private fun CourseDetailScreenContent(
     modifier: Modifier = Modifier,
-    state: CourseDetailScreenSate,
+    state: CourseDetailInfoScreenSate,
     onTryAgain: () -> Unit,
 ) {
     Column(
         modifier = modifier
     ) {
         when (state) {
-            is CourseDetailScreenSate.Error -> {
+            is CourseDetailInfoScreenSate.Error -> {
                 RetryCall(
                     modifier = Modifier.fillMaxSize(),
                     errorRes = state.errorMessageRes,
@@ -48,11 +42,11 @@ private fun CourseDetailScreenContent(
                 )
             }
 
-            is CourseDetailScreenSate.Loading -> {
+            is CourseDetailInfoScreenSate.Loading -> {
                 FullScreenLoading()
             }
 
-            is CourseDetailScreenSate.Success -> {
+            is CourseDetailInfoScreenSate.Success -> {
                 CourseInfo(course = state.course)
             }
         }
