@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface CatalogRepository {
     fun getCourses(): Flow<List<Courses>>
     suspend fun loadNextPage()
+    suspend fun refresh()
 }

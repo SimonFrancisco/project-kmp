@@ -11,7 +11,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import francisco.simon.projectkmp.features.auth.navigation.AuthRoute
+import francisco.simon.projectkmp.features.auth.navigation.AuthGraph
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
 import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
 import francisco.simon.projectkmp.navigation.AppNavGraph
@@ -27,33 +27,32 @@ fun App() {
         val navController = rememberNavController()
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val appViewModel: AppViewModel = koinViewModel()
-        val state by appViewModel.authorized.collectAsStateWithLifecycle()
-
-        if (state != AppState.Loading) {
-            Scaffold(
-                bottomBar = {
-                    BottomBarSettings(currentBackStackEntry, navController)
-                }
-            ) { innerPadding ->
-                AppNavGraph(
-                    navController = navController,
-                    startDestination = when (state) {
-                        AppState.Authorized -> CatalogGraph
-                        AppState.Unauthorized -> OnboardingRoute
-                        else -> OnboardingRoute
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                )
+        val state by appViewModel.state.collectAsStateWithLifecycle()
+        Scaffold(
+            bottomBar = {
+                BottomBarSettings(currentBackStackEntry, navController)
             }
+        ) { innerPadding ->
+            AppNavGraph(
+                navController = navController,
+                startDestination = when (state) {
+                    AppState.Authorized -> CatalogGraph
+                    AppState.Unauthorized -> AuthGraph
+                    AppState.Onboarding -> OnboardingRoute
+                    AppState.Loading -> DummyRoute
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            )
         }
     }
 }
 
 private val hiddenBottomBarRoutes = setOf(
+    DummyRoute::class,
     OnboardingRoute::class,
-    AuthRoute::class
+    AuthGraph::class
 )
 
 @Composable

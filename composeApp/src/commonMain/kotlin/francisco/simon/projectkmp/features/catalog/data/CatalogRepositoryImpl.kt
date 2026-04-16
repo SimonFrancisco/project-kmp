@@ -26,6 +26,7 @@ class CatalogRepositoryImpl(
     private companion object {
         const val FIRST_PAGE = 1
         const val RETRY_TIMES = 3L
+        const val PAGE_SIZE = 10
     }
 
     private val loadTrigger = MutableSharedFlow<Unit>(replay = 1)
@@ -42,6 +43,7 @@ class CatalogRepositoryImpl(
                 urlString = "https://stepik.org/api/course-lists"
             ) {
                 parameter(key = "page", value = startFrom)
+                parameter(key = "page_size", value = PAGE_SIZE)
             }.body<CourseListResponseDto>()
 
             nextPage += 1
@@ -53,7 +55,6 @@ class CatalogRepositoryImpl(
         }.retry(RETRY_TIMES)
         .flowOn(Dispatchers.IO)
 
-
     override fun getCourses(): Flow<List<Courses>> {
         return loadedListFlow
     }
@@ -62,4 +63,10 @@ class CatalogRepositoryImpl(
         loadTrigger.emit(Unit)
     }
 
+    override suspend fun refresh() {
+        nextPage = FIRST_PAGE
+        hasNext = true
+        _coursesTemp.clear()
+        loadTrigger.emit(Unit)
+    }
 }

@@ -5,11 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import francisco.simon.projectkmp.features.auth.navigation.AuthRoute
-import francisco.simon.projectkmp.features.auth.ui.AuthScreen
-import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
+import francisco.simon.projectkmp.app.DummyRoute
+import francisco.simon.projectkmp.features.auth.navigation.AuthGraph
+import francisco.simon.projectkmp.features.auth.navigation.authNavGraph
 import francisco.simon.projectkmp.features.catalog.navigation.catalogNavGraph
-import francisco.simon.projectkmp.features.courses.navigation.coursesNavGraph
+import francisco.simon.projectkmp.features.courses.navigation.userCoursesNavGraph
 import francisco.simon.projectkmp.features.onboarding.navigation.OnboardingRoute
 import francisco.simon.projectkmp.features.onboarding.screen.OnboardingScreen
 import francisco.simon.projectkmp.features.profile.navigation.profileNavGraph
@@ -26,30 +26,23 @@ internal fun AppNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
+        composable<DummyRoute> {}
         composable<OnboardingRoute> {
             OnboardingScreen(
-                onNavigateToCatalogScreen = {
-                    navController.navigate(AuthRoute)
-                }
-            )
-        }
-        composable<AuthRoute> {
-            AuthScreen(
-                onAuthFinished = {
-                    navController.navigate(CatalogGraph) {
-                        popUpTo(AuthRoute) {
+                onOpenAuthScreen = {
+                    navController.navigate(AuthGraph) {
+                        popUpTo(OnboardingRoute) {
                             inclusive = true
                         }
+                        launchSingleTop = true
                     }
-                },
-                onNavigateBack = {
-                    navController.popBackStack()
                 }
             )
         }
+        authNavGraph(navController)
         catalogNavGraph(navController)
         searchNavGraph(navController)
-        coursesNavGraph()
+        userCoursesNavGraph(navController)
         profileNavGraph(navController)
     }
 }

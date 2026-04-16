@@ -3,70 +3,116 @@ package francisco.simon.projectkmp.features.profile.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import francisco.simon.projectkmp.ui.components.CustomAsyncImage
-import francisco.simon.projectkmp.ui.components.ProceedButton
-import francisco.simon.projectkmp.ui.theme.paddingMedium
-import francisco.simon.projectkmp.ui.utils.VerticalSpacerMedium
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import francisco.simon.projectkmp.features.profile.domain.entity.User
+import francisco.simon.projectkmp.ui.components.FullScreenLoading
+import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.utils.EffectsConsumer
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import projectkmp.composeapp.generated.resources.Res
-import projectkmp.composeapp.generated.resources.login_button_text
-import projectkmp.composeapp.generated.resources.non_authorized_user
-
-private const val STEPIK_IMAGE_LINK =
-    "https://upload.wikimedia.org/wikipedia/commons/4/42/Stepik_logotype.png"
+import projectkmp.composeapp.generated.resources.logout_button_label
 
 @Composable
 fun ProfileScreen(
-    onNavigateToLogin: () -> Unit
+    onOpenAuthScreen: () -> Unit,
+    viewModel: ProfileScreenViewModel = koinViewModel()
 ) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val refreshLoading = viewModel.showRefreshLoading.collectAsStateWithLifecycle()
     Scaffold { innerPaddings ->
         ProfileScreenContent(
-            onNavigateToLogin = onNavigateToLogin,
-            modifier = Modifier.padding(innerPaddings)
+            modifier = Modifier.padding(innerPaddings),
+            state = state.value,
+            refreshLoading = refreshLoading.value,
+            onIntent = viewModel::onHandleIntent
         )
+    }
+    EffectsConsumer(viewModel.effects) { effect ->
+        when (effect) {
+            is ProfileScreenEffect.NavigateToAuthScreen -> {
+                onOpenAuthScreen()
+            }
+        }
     }
 }
 
 @Composable
 private fun ProfileScreenContent(
-    onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
+    state: ProfileScreenState,
+    refreshLoading: Boolean,
+    onIntent: (ProfileScreenIntent) -> Unit
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingMedium),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        CustomAsyncImage(
-            model = STEPIK_IMAGE_LINK
-        )
-        VerticalSpacerMedium()
-        Text(
-            text = stringResource(Res.string.non_authorized_user),
-            style = MaterialTheme.typography.titleLarge
-        )
-        VerticalSpacerMedium()
-        ProceedButton(
-            onClick = onNavigateToLogin,
-            buttonText = Res.string.login_button_text
-        )
+        when (state) {
+            is ProfileScreenState.Error -> {
+                RetryCall(
+                    modifier = Modifier.fillMaxWidth()
+                        .weight(1f),
+                    errorRes = state.errorMessageRes,
+                    onClick = {
+                        onIntent(ProfileScreenIntent.TryAgain)
+                    }
+                )
+            }
+            is ProfileScreenState.Loading -> {
+                FullScreenLoading()
+            }
+            is ProfileScreenState.Success -> {
+                PullToRefreshBox(
+                    isRefreshing = refreshLoading,
+                    onRefresh = { onIntent(ProfileScreenIntent.Refresh) }
+                ) {
+                    UserProfileItem(
+                        user = state.user,
+                    )
+                }
+            }
+        }
+        Button(
+            onClick = { onIntent(ProfileScreenIntent.Logout) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Text(stringResource(Res.string.logout_button_label))
+        }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-private fun ProfileScreenScreenPreview() {
-    ProfileScreen(
-        onNavigateToLogin = {}
+private fun ProfileScreenPreview() {
+    ProfileScreenContent(
+        state = ProfileScreenState.Success(
+            User(
+                id = 1,
+                fullName = "Simon Francisco",
+                image = "https://stepik.org/users/1052079324/4355117f4b25480787b8622fea76eb057ff250c1/avatar.svg",
+                bio = "Android developer",
+                registrationDate = "2025-05-14T15:43:14Z"
+            )
+        ),
+        refreshLoading = false,
+        onIntent = {},
     )
 }

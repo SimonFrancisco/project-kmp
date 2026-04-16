@@ -1,8 +1,7 @@
 package francisco.simon.projectkmp.features.search.data
 
 import francisco.simon.projectkmp.features.search.data.dto.SearchResponseDto
-import francisco.simon.projectkmp.features.search.data.dto.toDomain
-import francisco.simon.projectkmp.features.search.domain.entity.SearchCourse
+import francisco.simon.projectkmp.features.search.data.dto.toListId
 import francisco.simon.projectkmp.features.search.domain.repository.SearchRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -31,7 +30,7 @@ class SearchRepositoryImpl(
     private val loadTrigger = MutableSharedFlow<Unit>(replay = 1)
     private var nextPage: Int = FIRST_PAGE
     private var hasNext: Boolean = true
-    private val _coursesTemp = mutableListOf<SearchCourse>()
+    private val _coursesTemp = mutableListOf<Int>()
 
     private val loadedListFlow = loadTrigger
         .mapLatest {
@@ -46,13 +45,13 @@ class SearchRepositoryImpl(
 
             hasNext = response.metaDto.next
 
-            _coursesTemp += response.toDomain()
+            _coursesTemp += response.toListId()
 
             _coursesTemp.toList()
         }.retry(RETRY_TIMES)
         .flowOn(Dispatchers.IO)
 
-    override suspend fun searchCourses(query: String): Flow<List<SearchCourse>> {
+    override suspend fun searchCourses(query: String): Flow<List<Int>> {
         currentQuery = query
         nextPage = FIRST_PAGE
         hasNext = true

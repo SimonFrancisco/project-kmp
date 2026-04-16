@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,9 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import francisco.simon.projectkmp.features.search.domain.entity.SearchCourse
+import francisco.simon.projectkmp.core.domain.entity.Course
 import francisco.simon.projectkmp.ui.components.FullScreenLoading
 import francisco.simon.projectkmp.ui.components.RetryCall
+import francisco.simon.projectkmp.ui.components.courseCard.CourseCard
+import francisco.simon.projectkmp.ui.utils.EffectsConsumer
 import francisco.simon.projectkmp.ui.utils.LoadMorePages
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -48,8 +49,7 @@ fun SearchScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 value = query.value,
-                onValueChange = viewModel::onQuery,
-                onClear = viewModel::onClear
+                onIntent = viewModel::onHandleIntent
             )
         }
     ) { innerPadding ->
@@ -59,10 +59,14 @@ fun SearchScreen(
                 .padding(top = innerPadding.calculateTopPadding()),
             state = state.value,
             nextDataIsLoading = nextDataIsLoading.value,
-            onTryAgain = viewModel::retry,
-            onCourseClick = onOpenDetailScreen,
-            loadNextCourses = viewModel::loadNextCourses
+            onIntent = viewModel::onHandleIntent
         )
+    }
+
+    EffectsConsumer(viewModel.effects) { effect ->
+        when (effect) {
+            is SearchScreenEffect.NavigateToCourseDetail -> onOpenDetailScreen(effect.courseId)
+        }
     }
 }
 
@@ -71,9 +75,7 @@ private fun SearchScreenContent(
     modifier: Modifier = Modifier,
     state: SearchScreenState,
     nextDataIsLoading: Boolean,
-    onTryAgain: () -> Unit,
-    onCourseClick: (Int) -> Unit,
-    loadNextCourses: () -> Unit
+    onIntent: (SearchScreenIntent) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -81,8 +83,11 @@ private fun SearchScreenContent(
         when (state) {
             is SearchScreenState.Error -> {
                 RetryCall(
+                    modifier = Modifier.fillMaxSize(),
                     errorRes = state.errorMessageRes,
-                    onClick = onTryAgain
+                    onClick = {
+                        onIntent(SearchScreenIntent.TryAgain)
+                    }
                 )
             }
 
@@ -94,10 +99,14 @@ private fun SearchScreenContent(
 
             is SearchScreenState.Success -> {
                 SearchCourseList(
-                    onGoToDetailedInfo = onCourseClick,
+                    onGoToDetailedInfo = {
+                        onIntent(SearchScreenIntent.CourseClicked(it))
+                    },
                     courses = state.courses,
                     nextDataIsLoading = nextDataIsLoading,
-                    loadNextCourses = loadNextCourses
+                    loadNextCourses = {
+                        onIntent(SearchScreenIntent.LoadMoreCourses)
+                    }
                 )
             }
         }
@@ -106,8 +115,9 @@ private fun SearchScreenContent(
 
 @Composable
 private fun SearchCourseList(
+    modifier: Modifier = Modifier,
     onGoToDetailedInfo: (Int) -> Unit,
-    courses: List<SearchCourse>,
+    courses: List<Course>,
     nextDataIsLoading: Boolean,
     loadNextCourses: () -> Unit
 ) {
@@ -118,23 +128,23 @@ private fun SearchCourseList(
         loadMoreData = loadNextCourses
     )
     LazyColumn(
+        modifier = modifier.fillMaxSize(),
         state = listState,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(courses, key = { searchCourse -> searchCourse.id }) { searchCourse ->
-            SearchCourseCard(
-                course = searchCourse,
+        items(courses, key = { course -> course.id }) { course ->
+            CourseCard(
+                modifier = Modifier.fillMaxWidth(),
+                course = course,
                 onCardClicked = onGoToDetailedInfo
             )
         }
-
-        item {
-            if (nextDataIsLoading) {
+        if (nextDataIsLoading) {
+            item {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -143,4 +153,3 @@ private fun SearchCourseList(
         }
     }
 }
-

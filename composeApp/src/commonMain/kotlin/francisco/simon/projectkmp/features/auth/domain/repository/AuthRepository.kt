@@ -6,5 +6,5 @@ interface AuthRepository {
 
     suspend fun exchangeCodeForToken(code: String): Result<Token>
 
-    suspend fun refreshToken(refreshToken: String):Result<Token>
+    suspend fun refreshToken(refreshToken: String): Result<Token>
 }

@@ -1,0 +1,30 @@
+<resources>
+    <string name="onboarding_button_text">Завершить онбординг</string>
+    <string name="auth_login_button_text">Войти</string>
+    <string name="non_authorized_user">Необходимо войти!</string>
+    <string name="login_username">Имя пользователя</string>
+    <string name="login_password">Пароль</string>
+    <string name="login_button_text">Войти</string>
+    <string name="login_label">Войти</string>
+    <string name="try_again">Повторить</string>
+    <string name="error_unknown">Что-то пошло не так, попробуйте позже!</string>
+    <string name="catalog_bottom_bar_label">Каталог</string>
+    <string name="courses_bottom_bar_label">Мои курсы</string>
+    <string name="search_bottom_bar_label">Поиск</string>
+    <string name="profile_bottom_bar_label">Профиль</string>
+    <string name="search_place_holder">Поиск</string>
+    <string name="free_course_label">Бесплатно</string>
+    <string name="logout_button_label">Выйти</string>
+    <string name="course_certificate_label">Сертификат</string>
+    <string name="information_course_detail_tab_label">Инфо</string>
+    <string name="review_course_detail_tab_label">Отзывы</string>
+    <string name="units_course_detail_tab_label">Модули</string>
+    <string name="topics_to_be_learned">Чему вы научитесь</string>
+    <string name="about_course">О курсе</string>
+    <string name="course_requirements">Требования</string>
+    <string name="course_audience">Целевая аудитория</string>
+    <string name="course_time">Время прохождения курса</string>
+    <string name="course_unit_text">В работе!</string>
+    <string name="profile_registration_label">Дата регистрации</string>
+    <string name="profile_about_label">О себе</string>
+</resources>
