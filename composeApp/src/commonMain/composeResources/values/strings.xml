@@ -24,4 +24,7 @@
     <string name="course_requirements">Requirements</string>
     <string name="course_audience">Target audience</string>
     <string name="course_time">Time to finish the course</string>
+    <string name="course_unit_text">Coming soon!</string>
+    <string name="profile_registration_label">Registered</string>
+    <string name="profile_about_label">About</string>
 </resources>

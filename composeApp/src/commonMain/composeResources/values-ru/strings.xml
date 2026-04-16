@@ -24,4 +24,7 @@
     <string name="course_requirements">Требования</string>
     <string name="course_audience">Целевая аудитория</string>
     <string name="course_time">Время прохождения курса</string>
+    <string name="course_unit_text">В работе!</string>
+    <string name="profile_registration_label">Дата регистрации</string>
+    <string name="profile_about_label">О себе</string>
 </resources>

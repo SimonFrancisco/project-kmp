@@ -1,7 +1,9 @@
 package francisco.simon.projectkmp.di
 
+import francisco.simon.projectkmp.core.domain.usecase.GetCourseReviewsUseCase
 import francisco.simon.projectkmp.core.domain.usecase.GetCourseUseCase
 import francisco.simon.projectkmp.core.domain.usecase.GetCoursesUseCase
+import francisco.simon.projectkmp.core.domain.usecase.GetUserCoreUseCase
 import francisco.simon.projectkmp.features.auth.domain.usecase.LoginUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.GetCatalogCoursesUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUseCase
@@ -28,4 +30,6 @@ internal val useCaseModule = module {
     factoryOf(constructor = ::GetUserCoursesUseCase)
     factoryOf(constructor = ::GetUserUseCase)
     factoryOf(constructor = ::LogoutUseCase)
+    factoryOf(constructor = ::GetCourseReviewsUseCase)
+    factoryOf(constructor = ::GetUserCoreUseCase)
 }

@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import francisco.simon.projectkmp.features.common.screen.info.CourseDetailScreen
+import francisco.simon.projectkmp.features.common.screen.review.CourseDetailReviewScreen
+import francisco.simon.projectkmp.features.common.screen.unit.CourseDetailUnitScreen
 
 @Composable
 fun CourseDetailNavGraph(
@@ -22,7 +24,11 @@ fun CourseDetailNavGraph(
         composable<CourseDetailTabGraph.Information> {
             CourseDetailScreen(courseId = courseId)
         }
-        composable<CourseDetailTabGraph.Review> {}
-        composable<CourseDetailTabGraph.Units> {}
+        composable<CourseDetailTabGraph.Review> {
+            CourseDetailReviewScreen(courseId = courseId)
+        }
+        composable<CourseDetailTabGraph.Units> {
+            CourseDetailUnitScreen()
+        }
     }
 }
