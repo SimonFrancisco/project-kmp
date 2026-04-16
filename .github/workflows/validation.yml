@@ -1,0 +1,118 @@
+name: Validation
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+
+env:
+  STEPIK_CLIENT_ID: ${{ secrets.STEPIK_CLIENT_ID }}
+  STEPIK_CLIENT_SECRET: ${{ secrets.STEPIK_CLIENT_SECRET }}
+  STEPIK_STORE_PASSWORD: ${{ secrets.STEPIK_STORE_PASSWORD }}
+  STEPIK_KEY_ALIAS: ${{ secrets.STEPIK_KEY_ALIAS }}
+  STEPIK_KEY_PASSWORD: ${{ secrets.STEPIK_KEY_PASSWORD }}
+
+jobs:
+  assemble-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Checkout keystore repo
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ secrets.KEYSTORE_GIT_REPOSITORY }}
+          token: ${{ secrets.KEYSTORE_ACCESS_TOKEN }}
+          path: composeApp/keystore
+
+      - name: Install JDK 17 (Zulu)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Setup
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Gradle Cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Assemble Debug
+        if: ${{ github.event_name == 'pull_request' }}
+        run: ./gradlew assembleDebug
+
+      - name: Assemble Release
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          ./gradlew assembleRelease bundleRelease
+
+      - name: Upload APK
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: composeApp-release.apk
+          path: composeApp/build/outputs/apk/release/composeApp-release.apk
+
+  detekt:
+    needs: [ 'assemble-android' ]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install JDK 17 (Zulu)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Setup
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-home-cache-cleanup: true
+
+      - name: Gradle Cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Detekt
+        run: ./gradlew detekt --continue
+        continue-on-error: false
+
+      - name: Detekt Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detekt-reports
+          path: |
+            **/build/reports/detekt/
+          retention-days: 7

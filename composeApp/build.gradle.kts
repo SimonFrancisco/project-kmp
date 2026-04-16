@@ -1,5 +1,4 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -11,24 +10,43 @@ plugins {
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.build.konfig)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
 }
 
 val localPropertiesFile: File = rootProject.file("local.properties")
 val localProperties = Properties().apply {
-    load(localPropertiesFile.inputStream())
+    if (localPropertiesFile.exists()) {
+        load(localPropertiesFile.inputStream())
+    }
 }
 
 buildkonfig {
     packageName = "francisco.simon.projectkmp"
     objectName = "StepikAppSecrets"
 
-    val clientId = localProperties["stepik.client.id"] as String
-    val clientSecret = localProperties["stepik.client.secret"] as String
+    // Fallback to environment variables for CI
+    val clientId =
+        (localProperties["stepik.client.id"] ?: System.getenv("STEPIK_CLIENT_ID")) as String
+    val clientSecret =
+        (localProperties["stepik.client.secret"] ?: System.getenv("STEPIK_CLIENT_SECRET")) as String
 
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_ID", clientId)
-        buildConfigField(FieldSpec.Type.STRING,"STEPIK_CLIENT_SECRET", clientSecret)
+        buildConfigField(FieldSpec.Type.STRING, "STEPIK_CLIENT_ID", clientId)
+        buildConfigField(FieldSpec.Type.STRING, "STEPIK_CLIENT_SECRET", clientSecret)
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    autoCorrect = true
+    source.setFrom(
+        "src/commonMain/kotlin",
+        "src/androidMain/kotlin",
+        "src/iosMain/kotlin"
+    )
+    config.setFrom(file("../config/detekt/detekt.yml"))
 }
 
 kotlin {
@@ -48,8 +66,6 @@ kotlin {
         }
     }
 
-    jvm()
-
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
@@ -57,6 +73,8 @@ kotlin {
             implementation(libs.ktor.android)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.android)
+            implementation(project.dependencies.platform(libs.firebase.android.bom))
+            implementation(libs.firebase.common)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -82,17 +100,14 @@ kotlin {
             implementation(libs.ktor.auth)
             implementation(libs.data.store)
             implementation(libs.data.store.preferences)
+            implementation(libs.kotlinx.datetime)
+            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         iosMain.dependencies {
             implementation(libs.ktor.ios)
-        }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.desktop)
         }
     }
 }
@@ -107,8 +122,28 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+    }
+    signingConfigs {
+        val keyStoreFile = file("keystore/keystore_config")
+        val keyStore = Properties().apply {
+            if (keyStoreFile.exists()) {
+                load(keyStoreFile.inputStream())
+            }
+        }
 
-
+        register("release").configure {
+            if (keyStoreFile.exists()) {
+                storeFile = file("${keyStore["storeFile"]}")
+                storePassword = "${keyStore["storePassword"]}"
+                keyAlias = "${keyStore["keyAlias"]}"
+                keyPassword = "${keyStore["keyPassword"]}"
+            } else {
+                storeFile = file("keystore/stepik_keystore")
+                storePassword = System.getenv("STEPIK_STORE_PASSWORD")
+                keyAlias = System.getenv("STEPIK_KEY_ALIAS")
+                keyPassword = System.getenv("STEPIK_KEY_PASSWORD")
+            }
+        }
     }
     packaging {
         resources {
@@ -116,9 +151,18 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
         }
+        debug {
+            isDebuggable = true
+        }
+    }
+    buildFeatures {
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -127,17 +171,29 @@ android {
 }
 
 dependencies {
+    debugImplementation(libs.leakcanary.android)
     debugImplementation(libs.compose.uiTooling)
 }
 
-compose.desktop {
-    application {
-        mainClass = "francisco.simon.projectkmp.MainKt"
+tasks.register<Copy>("copyGitHooks") {
+    description = "Copies the git hooks to the .git folder."
+    group = "git hooks"
+    from("$rootDir/scripts")
+    into("$rootDir/.git/hooks/")
+}
 
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "francisco.simon.projectkmp"
-            packageVersion = "1.0.0"
-        }
+tasks.register<Exec>("installGitHooks") {
+    description = "Installs the git hooks."
+    group = "git hooks"
+    workingDir = rootDir
+    commandLine = listOf("chmod")
+    args("-R", "+x", ".git/hooks/")
+    dependsOn("copyGitHooks")
+    doLast {
+        logger.info("Git hook installed successfully.")
     }
+}
+
+tasks.named("preBuild") {
+    dependsOn("installGitHooks")
 }

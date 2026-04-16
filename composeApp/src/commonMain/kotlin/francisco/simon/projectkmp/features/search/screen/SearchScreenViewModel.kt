@@ -1,6 +1,5 @@
 package francisco.simon.projectkmp.features.search.screen
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import francisco.simon.projectkmp.features.search.domain.usecase.LoadNextSearchPageUseCase
@@ -10,6 +9,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -36,11 +36,15 @@ class SearchScreenViewModel(
     }
 
     private val retryTrigger = MutableSharedFlow<Unit>(replay = 1)
-    val showLoading = mutableStateOf<Boolean>(false)
+    private val _showLoading = MutableStateFlow(false)
+    val showLoading = _showLoading.asStateFlow()
 
     private val _state: MutableStateFlow<SearchScreenState> =
         MutableStateFlow(SearchScreenState.Idle)
     val state = _state.asStateFlow()
+
+    private val _effects: MutableSharedFlow<SearchScreenEffect> = MutableSharedFlow()
+    val effects = _effects.asSharedFlow()
 
     private val _query = MutableStateFlow(value = "")
     val query: StateFlow<String> = _query.asStateFlow()
@@ -49,7 +53,7 @@ class SearchScreenViewModel(
         searchCourses()
     }
 
-    fun searchCourses() {
+    private fun searchCourses() {
         viewModelScope.launch {
             combine(
                 _query.debounce(DEBOUNCE),
@@ -62,11 +66,11 @@ class SearchScreenViewModel(
                         searchCoursesUseCase(query).mapLatest { result ->
                             result.fold(
                                 onSuccess = { courses ->
-                                    showLoading.value = false
+                                    _showLoading.value = false
                                     SearchScreenState.Success(courses)
                                 },
                                 onFailure = {
-                                    showLoading.value = false
+                                    _showLoading.value = false
                                     SearchScreenState.Error(Res.string.error_unknown)
                                 }
                             )
@@ -78,26 +82,41 @@ class SearchScreenViewModel(
         }
     }
 
-    fun retry() {
+    private fun retry() {
         retryTrigger.tryEmit(Unit)
         _state.update { SearchScreenState.Loading }
     }
 
-    fun onClear() {
+    private fun onClear() {
         _query.update { "" }
         _state.update { SearchScreenState.Idle }
     }
 
-    fun onQuery(query: String) {
+    private fun onQuery(query: String) {
         _query.update { query }
         _state.update { SearchScreenState.Loading }
-
     }
 
-    fun loadNextCourses() {
+    private fun loadNextCourses() {
         viewModelScope.launch {
-            showLoading.value = true
+            _showLoading.value = true
             loadNextSearchPageUseCase()
+        }
+    }
+
+    private fun handleCourseClicked(courseId: Int) {
+        viewModelScope.launch {
+            _effects.emit(SearchScreenEffect.NavigateToCourseDetail(courseId))
+        }
+    }
+
+    fun onHandleIntent(intent: SearchScreenIntent) {
+        when (intent) {
+            SearchScreenIntent.ClearSearch -> onClear()
+            is SearchScreenIntent.CourseClicked -> handleCourseClicked(intent.courseId)
+            SearchScreenIntent.LoadMoreCourses -> loadNextCourses()
+            is SearchScreenIntent.Search -> onQuery(intent.query)
+            SearchScreenIntent.TryAgain -> retry()
         }
     }
 }

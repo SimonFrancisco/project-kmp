@@ -54,9 +54,16 @@ object HttpClientFactory {
             }
             install(plugin = Auth) {
                 bearer {
+                    cacheTokens = false
                     loadTokens {
                         tokenStorage.getTokens()
                     }
+
+                    /**
+                     * Stepik API doesn't return 401 when token is needed in authorized zone
+                     * So this callback is useless in our case, keep it in case the API changes
+                     * Check work-around in TokenStorageImpl
+                     */
                     refreshTokens {
                         val refreshToken = oldTokens?.refreshToken ?: return@refreshTokens null
                         val newToken = authRepository.refreshToken(refreshToken).getOrNull()

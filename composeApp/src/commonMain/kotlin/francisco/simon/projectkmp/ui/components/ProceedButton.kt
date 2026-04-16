@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
+import francisco.simon.projectkmp.ui.utils.CORNER_SIZE_PERCENTAGE30
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -18,7 +19,7 @@ internal fun ProceedButton(
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(CornerSize(30)),
+        shape = RoundedCornerShape(CornerSize(CORNER_SIZE_PERCENTAGE30)),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
             contentColor = MaterialTheme.colorScheme.surfaceContainerLowest

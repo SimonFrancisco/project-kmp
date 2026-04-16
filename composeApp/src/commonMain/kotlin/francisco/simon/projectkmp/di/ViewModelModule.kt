@@ -1,43 +1,41 @@
 package francisco.simon.projectkmp.di
 
 import francisco.simon.projectkmp.app.AppViewModel
-import francisco.simon.projectkmp.features.auth.ui.AuthScreenViewModel
+import francisco.simon.projectkmp.features.auth.ui.auth.AuthScreenViewModel
+import francisco.simon.projectkmp.features.auth.ui.webView.WebViewAuthScreenViewModel
 import francisco.simon.projectkmp.features.catalog.ui.screen.CatalogScreenViewModel
-import francisco.simon.projectkmp.features.common.CourseDetailScreenViewModel
+import francisco.simon.projectkmp.features.common.screen.info.CourseDetailInfoScreenViewModel
+import francisco.simon.projectkmp.features.common.screen.review.CourseDetailReviewScreenViewModel
+import francisco.simon.projectkmp.features.courses.screen.UserCourseScreenViewModel
+import francisco.simon.projectkmp.features.onboarding.screen.OnBoardingScreenViewModel
+import francisco.simon.projectkmp.features.profile.screen.ProfileScreenViewModel
 import francisco.simon.projectkmp.features.search.screen.SearchScreenViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 internal val viewModelModule = module {
-    viewModel {
-        AuthScreenViewModel(loginUseCase = get())
-    }
-
-    viewModel {
-        CatalogScreenViewModel(
-            getCoursesUseCase = get(),
-            getCatalogCoursesUseCase = get(),
-            loadNextPageUseCase = get()
-        )
-    }
+    viewModelOf(constructor = ::AuthScreenViewModel)
+    viewModelOf(constructor = ::WebViewAuthScreenViewModel)
+    viewModelOf(constructor = ::OnBoardingScreenViewModel)
+    viewModelOf(constructor = ::CatalogScreenViewModel)
+    viewModelOf(constructor = ::SearchScreenViewModel)
+    viewModelOf(constructor = ::UserCourseScreenViewModel)
+    viewModelOf(constructor = ::ProfileScreenViewModel)
+    viewModelOf(constructor = ::AppViewModel)
 
     viewModel { params ->
-        CourseDetailScreenViewModel(
+        CourseDetailInfoScreenViewModel(
             courseId = params.get(),
             getCourseUseCase = get()
         )
     }
 
-    viewModel {
-        SearchScreenViewModel(
-            searchCoursesUseCase = get(),
-            loadNextSearchPageUseCase = get()
-        )
-    }
-
-    viewModel {
-        AppViewModel(
-            tokenStorage = get()
+    viewModel { params ->
+        CourseDetailReviewScreenViewModel(
+            courseId = params.get(),
+            getCourseReviewsUseCase = get(),
+            getUserCoreUseCase = get()
         )
     }
 }

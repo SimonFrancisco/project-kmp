@@ -1,6 +1,5 @@
 package francisco.simon.projectkmp.features.search.data.dto
 
-import francisco.simon.projectkmp.features.search.domain.entity.SearchCourse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,8 +11,9 @@ data class SearchResponseDto(
     val courses: List<SearchCourseDto>
 )
 
-internal fun SearchResponseDto.toDomain():List<SearchCourse>{
-    return courses.map {
-        it.toDomain()
+fun SearchResponseDto.toListId(): List<Int> {
+    return courses.mapNotNull {
+        it.id
     }
 }
+

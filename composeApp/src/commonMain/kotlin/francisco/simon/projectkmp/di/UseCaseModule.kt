@@ -1,16 +1,24 @@
 package francisco.simon.projectkmp.di
 
+import francisco.simon.projectkmp.core.domain.usecase.GetCourseReviewsUseCase
 import francisco.simon.projectkmp.core.domain.usecase.GetCourseUseCase
 import francisco.simon.projectkmp.core.domain.usecase.GetCoursesUseCase
+import francisco.simon.projectkmp.core.domain.usecase.GetUserCoreUseCase
 import francisco.simon.projectkmp.features.auth.domain.usecase.LoginUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.GetCatalogCoursesUseCase
 import francisco.simon.projectkmp.features.catalog.domain.usecase.LoadNextPageUseCase
+import francisco.simon.projectkmp.features.catalog.domain.usecase.RefreshUseCase
+import francisco.simon.projectkmp.features.courses.domain.usecase.GetUserCoursesUseCase
+import francisco.simon.projectkmp.features.onboarding.domain.usecase.CompleteOnboardingUseCase
+import francisco.simon.projectkmp.features.profile.domain.usecase.GetUserUseCase
+import francisco.simon.projectkmp.features.profile.domain.usecase.LogoutUseCase
 import francisco.simon.projectkmp.features.search.domain.usecase.LoadNextSearchPageUseCase
 import francisco.simon.projectkmp.features.search.domain.usecase.SearchCoursesUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 internal val useCaseModule = module {
+    factoryOf(constructor = ::CompleteOnboardingUseCase)
     factoryOf(constructor = ::GetCoursesUseCase)
     factoryOf(constructor = ::GetCatalogCoursesUseCase)
     factoryOf(constructor = ::LoadNextPageUseCase)
@@ -18,4 +26,10 @@ internal val useCaseModule = module {
     factoryOf(constructor = ::SearchCoursesUseCase)
     factoryOf(constructor = ::LoadNextSearchPageUseCase)
     factoryOf(constructor = ::LoginUseCase)
+    factoryOf(constructor = ::RefreshUseCase)
+    factoryOf(constructor = ::GetUserCoursesUseCase)
+    factoryOf(constructor = ::GetUserUseCase)
+    factoryOf(constructor = ::LogoutUseCase)
+    factoryOf(constructor = ::GetCourseReviewsUseCase)
+    factoryOf(constructor = ::GetUserCoreUseCase)
 }

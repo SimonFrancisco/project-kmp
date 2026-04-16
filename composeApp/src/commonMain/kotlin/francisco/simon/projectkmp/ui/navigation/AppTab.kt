@@ -1,7 +1,7 @@
 package francisco.simon.projectkmp.ui.navigation
 
 import francisco.simon.projectkmp.features.catalog.navigation.CatalogGraph
-import francisco.simon.projectkmp.features.courses.navigation.CoursesGraph
+import francisco.simon.projectkmp.features.courses.navigation.UserCoursesGraph
 import francisco.simon.projectkmp.features.profile.navigation.ProfileGraph
 import francisco.simon.projectkmp.features.search.navigation.SearchGraph
 import org.jetbrains.compose.resources.DrawableResource
@@ -36,7 +36,7 @@ internal val mainTabs = listOf<AppTab>(
     AppTab(
         iconRes = Res.drawable.ic_courses,
         labelRes = Res.string.courses_bottom_bar_label,
-        graph = CoursesGraph
+        graph = UserCoursesGraph
     ),
     AppTab(
         iconRes = Res.drawable.ic_profile,
