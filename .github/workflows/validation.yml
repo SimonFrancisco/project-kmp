@@ -36,9 +36,7 @@ jobs:
           java-version: '17'
 
       - name: Gradle Setup
-        uses: gradle/gradle-build-action@v3
-        with:
-          gradle-home-cache-cleanup: true
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Gradle Cache
         uses: actions/cache@v5
@@ -90,9 +88,7 @@ jobs:
           java-version: '17'
 
       - name: Gradle Setup
-        uses: gradle/gradle-build-action@v3
-        with:
-          gradle-home-cache-cleanup: true
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Gradle Cache
         uses: actions/cache@v5
